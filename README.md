@@ -1,1 +1,1 @@
-it is not mutch
+This website is for the youtube channel Noah and eds train adventures 

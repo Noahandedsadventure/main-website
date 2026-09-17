@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noah and Ed's Train Adventures | CN Trains on the Sprague Sub</title>
+    <style>
+        /* Modern Dark Theme Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #0a0a0a;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e53935;
+        }
+
+        nav .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: #e53935;
+        }
+
+        /* Hero Section */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), 
+                        url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=1200') center/cover no-repeat;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 4px solid #e53935;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            border-left: 4px solid #e53935;
+            padding-left: 10px;
+        }
+
+        /* Auto Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .video-card {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: transform 0.2s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-card iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h3 {
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .loading-text {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Discord Section */
+        .discord-section {
+            background-color: #2c2f33;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .discord-btn {
+            display: inline-block;
+            background-color: #5865F2;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .discord-btn:hover {
+            background-color: #4752C4;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #0a0a0a;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Menu for Multiple Pages -->
+    <nav>
+        <a href="index.html" class="logo">Noah & Ed's Train Adventures</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="sprague-sub.html">The Sprague Sub</a>
+            <a href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank">YouTube</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Raw Rail Power on the Sprague Sub</h1>
+        <p>Your home for heavy-haul CN train action. We track the heaviest freight from Manitoba down to the Heartland.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- AUTOMATIC VIDEO SECTION -->
+        <h2>Latest Uploads (Shorts, Streams & Longform)</h2>
+        <p style="margin-bottom: 20px; color: #aaa;">This section updates automatically every time we upload or go live on YouTube!</p>
+        
+        <div class="video-grid" id="auto-video-grid">
+            <p class="loading-text">Loading latest rail action...</p>
+        </div>
+
+        <!-- Discord Section -->
+        <div class="discord-section">
+            <h2>Join the Base 2 Crew on Discord</h2>
+            <p>Talk railfanning, get live train updates, and connect with other CN Sprague Sub fans.</p>
+            <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" class="discord-btn">Join Our Discord Server</a>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Noah and Ed's Train Adventures. Built for railfans.</p>
+    </footer>
+
+    <!-- JAVASCRIPT TO FETCH VIDEOS AUTOMATICALLY -->
+    <script>
+        async function fetchLatestVideos() {
+            // !!! IMPORTANT: Replace 'YOUR_CHANNEL_ID_HERE' with your actual YouTube Channel ID (starts with UC) !!!
+            const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
+            
+            // We use rss2json to bypass YouTube's API key requirement
+            const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if(data.status === 'ok') {
+                    const videoGrid = document.getElementById('auto-video-grid');
+                    videoGrid.innerHTML = ''; // Clear the "loading" text
+                    
+                    // Grab the 3 most recent uploads (This includes shorts, streams, and standard videos)
+                    const latestVideos = data.items.slice(0, 3);
+                    
+                    latestVideos.forEach(video => {
+                        // Extract the video ID to embed it
+                        const videoId = video.link.split('v=')[1];
+                        
+                        // Create the HTML for the video
+                        const videoCard = `
+                            <div class="video-card">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" title="${video.title}" allowfullscreen></iframe>
+                                <div class="video-info">
+                                    <h3>${video.title}</h3>
+                                </div>
+                            </div>
+                        `;
+                        videoGrid.innerHTML += videoCard;
+                    });
+                }
+            } catch (error) {
+                document.getElementById('auto-video-grid').innerHTML = '<p>Error loading videos. Check out our YouTube channel directly!</p>';
+            }
+        }
+
+        // Run the function when the page loads
+        fetchLatestVideos();
+    </script>
+
+</body>
+</html>

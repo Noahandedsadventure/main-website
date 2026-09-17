@@ -50,8 +50,9 @@
 
         /* Hero Section */
         header {
+            /* UPDATED BACKGROUND IMAGE HERE */
             background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), 
-                        url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=1200') center/cover no-repeat;
+                        url('logo.jpg') center/cover no-repeat;
             padding: 80px 20px;
             text-align: center;
             border-bottom: 4px solid #e53935;
@@ -170,6 +171,7 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="sprague-sub.html">The Sprague Sub</a>
+            <a href="about.html">About Us</a>
             <a href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank">YouTube</a>
         </div>
     </nav>
@@ -205,7 +207,7 @@
     <!-- JAVASCRIPT TO FETCH VIDEOS AUTOMATICALLY -->
     <script>
         async function fetchLatestVideos() {
-            // !!! IMPORTANT: Replace 'YOUR_CHANNEL_ID_HERE' with your actual YouTube Channel ID (starts with UC) !!!
+            // Your YouTube Channel ID is saved here!
             const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
             
             // We use rss2json to bypass YouTube's API key requirement

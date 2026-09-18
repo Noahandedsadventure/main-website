@@ -1,342 +1,806 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noah and Ed's Train Adventures | CN Trains on the Sprague Sub</title>
-    <style>
-        /* Modern Dark Theme Styling */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    <title>Noah & Ed's Train Adventures - CN Sprague Subdivision</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cn: {
+                            red: '#e53935',
+                            darkred: '#b71c1c',
+                            black: '#121212',
+                            card: '#1e1e1e',
+                            border: '#2e2e2e',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
         }
+    </script>
 
+    <style>
         body {
             background-color: #121212;
             color: #e0e0e0;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
         }
-
-        /* Navigation Bar */
-        nav {
-            background-color: #0a0a0a;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e53935;
+        .cn-gradient-overlay {
+            background: linear-gradient(180deg, rgba(18,18,18,0.7) 0%, rgba(18,18,18,0.95) 100%);
         }
-
-        nav .logo {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-            text-decoration: none;
+        .hero-bg {
+            background-image: url('logo.jpg'), url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
         }
-
-        nav .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 500;
-            transition: color 0.3s ease;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
-
-        nav .nav-links a:hover {
-            color: #e53935;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e1e1e;
         }
-
-        /* Hero Section */
-        header {
-            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), 
-                        url('logo.jpg') center/cover no-repeat;
-            padding: 80px 20px;
-            text-align: center;
-            border-bottom: 4px solid #e53935;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3e3e3e;
+            border-radius: 4px;
         }
-
-        header h1 {
-            font-size: 2.8rem;
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: #cccccc;
-            max-width: 600px;
-            margin: 0 auto 25px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #ffffff;
-            border-left: 4px solid #e53935;
-            padding-left: 10px;
-        }
-
-        /* Auto Video Grid */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-
-        .video-card {
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #333;
-            transition: transform 0.2s ease;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .video-card iframe {
-            width: 100%;
-            height: 200px;
-            border: none;
-        }
-
-        .video-info {
-            padding: 15px;
-        }
-
-        .video-info h3 {
-            font-size: 1.1rem;
-            color: #ffffff;
-        }
-
-        .loading-text {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        /* Video Ideas Form Section */
-        .idea-section {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            margin-bottom: 50px;
-        }
-
-        .idea-section p {
-            color: #aaa;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ccc;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .form-group input, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            background-color: #121212;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            border-color: #e53935;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .submit-btn {
-            background-color: #e53935;
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .submit-btn:hover {
-            background-color: #c62828;
-        }
-
-        /* Discord Section */
-        .discord-section {
-            background-color: #2c2f33;
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .discord-btn {
-            display: inline-block;
-            background-color: #5865F2;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 15px;
-            font-size: 1.1rem;
-            transition: background 0.3s;
-        }
-
-        .discord-btn:hover {
-            background-color: #4752C4;
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            background-color: #0a0a0a;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 1px solid #222;
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #e53935;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between custom-scrollbar bg-cn-black">
 
-    <!-- Navigation Menu -->
-    <nav>
-        <a href="index.html" class="logo">Noah & Ed's Train Adventures</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="sprague-sub.html">The Sprague Sub</a>
-            <a href="#submit-idea">Submit Video Idea</a>
-            <a href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank">YouTube</a>
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-cn-card/90 backdrop-blur-md border-b border-cn-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand / Logo -->
+                <a href="#home" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 bg-cn-red rounded-lg flex items-center justify-center font-black text-xl text-white shadow-lg shadow-cn-red/30 group-hover:scale-105 transition-transform">
+                        CN
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-extrabold text-lg text-white tracking-tight flex items-center gap-1.5">
+                            Noah & Ed's <span class="text-cn-red">Train Adventures</span>
+                        </span>
+                        <span class="text-xs text-gray-400 font-mono">Sprague Subdivision Spotters</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center space-x-1 lg:space-x-4 font-medium text-sm">
+                    <a href="#home" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition">Home</a>
+                    <a href="#sprague-sub" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition">Sprague Sub</a>
+                    <a href="#gear-guide" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition">Gear Guide</a>
+                    <a href="#video-ideas" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition">Video Ideas</a>
+                    <a href="#glossary" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition">Glossary</a>
+                    <a href="#staff-portal" onclick="openModal('staffModal')" class="px-3 py-2 text-gray-400 hover:text-cn-red hover:bg-white/5 rounded-md transition"><i class="fa-solid font-mono fa-lock text-xs mr-1"></i>Staff Portal</a>
+                    <a href="https://www.youtube.com/@NoahNEdTrainAdventures" target="_blank" rel="noopener noreferrer" class="ml-2 px-4 py-2 bg-cn-red hover:bg-cn-darkred text-white font-bold rounded-lg shadow-md transition flex items-center gap-2">
+                        <i class="fa-brands fa-youtube"></i> YouTube
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="p-2 text-gray-400 hover:text-white focus:outline-none" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-cn-card border-b border-cn-border px-4 pt-2 pb-4 space-y-2 text-base font-medium">
+            <a href="#home" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md">Home</a>
+            <a href="#sprague-sub" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md">Sprague Sub Dashboard</a>
+            <a href="#gear-guide" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md">Gear Guide</a>
+            <a href="#video-ideas" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md">Video Ideas & Submissions</a>
+            <a href="#glossary" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-md">Glossary</a>
+            <button onclick="openModal('staffModal')" class="w-full text-left px-3 py-2 text-gray-400 hover:text-cn-red hover:bg-white/5 rounded-md"><i class="fa-solid fa-lock text-xs mr-1"></i> Staff Portal</button>
+            <a href="https://www.youtube.com/@NoahNEdTrainAdventures" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 bg-cn-red text-white font-bold rounded-lg shadow-md mt-2">
+                <i class="fa-brands fa-youtube mr-2"></i> Visit YouTube Channel
+            </a>
         </div>
     </nav>
 
-    <header>
-        <h1>Raw Rail Power on the Sprague Sub</h1>
-        <p>Your home for heavy-haul CN train action. We track the heaviest freight from Manitoba down to the Heartland.</p>
+    <!-- Hero Section -->
+    <header id="home" class="relative hero-bg min-h-[85vh] flex items-center justify-center border-b border-cn-border overflow-hidden">
+        <div class="absolute inset-0 cn-gradient-overlay"></div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center my-12">
+            <!-- Alert / Status pill -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cn-red/20 border border-cn-red/40 text-cn-red text-xs sm:text-sm font-semibold mb-6 animate-pulse">
+                <span class="w-2 h-2 rounded-full bg-cn-red"></span>
+                CN Sprague Sub Live Monitoring Active
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight mb-6 uppercase">
+                Chasing Steel on the <br class="hidden sm:inline"><span class="text-transparent bg-clip-text bg-gradient-to-r from-cn-red via-red-500 to-amber-500">Sprague Subdivision</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-gray-300 text-base sm:text-lg mb-8 leading-relaxed font-normal">
+                Join Noah & Ed as we document Canadian National heavy freight manifests, grain drags, and intermodal trains from Winnipeg down through Giroux to the border at Rainy River.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#sprague-sub" class="w-full sm:w-auto px-8 py-3.5 bg-cn-red hover:bg-cn-darkred text-white font-bold rounded-xl shadow-lg hover:shadow-cn-red/20 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-tower-cell"></i> Live Sub Dashboard
+                </a>
+                <a href="#videos" class="w-full sm:w-auto px-8 py-3.5 bg-cn-card hover:bg-cn-border text-white border border-gray-700 font-bold rounded-xl transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Latest Captures
+                </a>
+            </div>
+
+            <!-- Highlights Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-white/10 text-left">
+                <div class="bg-cn-card/50 backdrop-blur-sm p-4 rounded-xl border border-white/5">
+                    <span class="text-xs text-gray-400 block font-mono">SCANNER FREQ</span>
+                    <span class="text-lg font-bold text-white">161.415 MHz</span>
+                    <span class="text-[10px] text-cn-red block">CN Road Channel</span>
+                </div>
+                <div class="bg-cn-card/50 backdrop-blur-sm p-4 rounded-xl border border-white/5">
+                    <span class="text-xs text-gray-400 block font-mono">SUBDIVISION</span>
+                    <span class="text-lg font-bold text-white">CN Sprague Sub</span>
+                    <span class="text-[10px] text-gray-400 block">Winnipeg to Rainy River</span>
+                </div>
+                <div class="bg-cn-card/50 backdrop-blur-sm p-4 rounded-xl border border-white/5">
+                    <span class="text-xs text-gray-400 block font-mono">EQUIPMENT</span>
+                    <span class="text-lg font-bold text-white">PRO-89 Scanner</span>
+                    <span class="text-[10px] text-green-400 block">200-Channel Handheld</span>
+                </div>
+                <div class="bg-cn-card/50 backdrop-blur-sm p-4 rounded-xl border border-white/5">
+                    <span class="text-xs text-gray-400 block font-mono">COMMUNITY</span>
+                    <span class="text-lg font-bold text-white">Base 2 Crew</span>
+                    <span class="text-[10px] text-indigo-400 block">Active Discord Hub</span>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        
-        <!-- AUTOMATIC VIDEO SECTION -->
-        <h2>Latest Uploads (Shorts, Streams & Longform)</h2>
-        <p style="margin-bottom: 20px; color: #aaa;">This section updates automatically every time we upload or go live on YouTube!</p>
-        
-        <div class="video-grid" id="auto-video-grid">
-            <p class="loading-text">Loading latest rail action...</p>
+    <!-- Location Weather & Track Conditions Dashboard -->
+    <section id="sprague-sub" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-cn-border gap-4">
+            <div>
+                <span class="text-cn-red font-bold uppercase tracking-wider text-xs">Live Monitoring</span>
+                <h2 class="text-3xl font-extrabold text-white">CN Sprague Sub Weather & Conditions</h2>
+                <p class="text-gray-400 text-sm mt-1">Real-time weather status & visibility index across key railfanning locations.</p>
+            </div>
+            <button id="refreshWeatherBtn" onclick="fetchLiveWeather()" class="self-start md:self-auto px-4 py-2 bg-cn-card hover:bg-cn-border border border-gray-700 text-xs font-semibold text-gray-200 rounded-lg flex items-center gap-2 transition">
+                <i class="fa-solid fa-arrows-rotate" id="weatherSpinner"></i> Refresh Conditions
+            </button>
         </div>
 
-        <!-- VIDEO IDEA SUBMISSION FORM -->
-        <div class="idea-section" id="submit-idea">
-            <h2>Have a Video Idea or Train Tip?</h2>
-            <p>Know a great spot along the Sprague Sub, spotted rare power, or have a concept for a future video? Send your ideas directly to Noah & Ed below!</p>
-
-            <form action="https://api.web3forms.com/submit" method="POST">
-                <!-- Web3Forms Access Key -->
-                <input type="hidden" name="access_key" value="b50a8281-5ad6-4642-9740-d7fcd97b515c">
-
-                <div class="form-group">
-                    <label for="name">Your Name / YouTube Handle:</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Winnipeg Card -->
+            <div class="bg-cn-card border border-cn-border rounded-2xl p-6 relative overflow-hidden shadow-xl hover:border-cn-red/50 transition">
+                <div class="absolute top-0 right-0 bg-cn-red text-white text-[10px] font-black px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+                    Terminal & Yard
+                </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center text-cn-red text-2xl">
+                        <i class="fa-solid fa-city"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Winnipeg, MB</h3>
+                        <p class="text-xs text-gray-400 font-mono">Mile 145.0 • Symington Yard Area</p>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="email">Your Email Address:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <div class="grid grid-cols-2 gap-3 my-4 bg-cn-black/50 p-3 rounded-xl border border-white/5">
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Temperature</span>
+                        <span class="text-2xl font-black text-white" id="wpg-temp">--°C</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Wind</span>
+                        <span class="text-sm font-bold text-gray-200" id="wpg-wind">-- km/h</span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="message">Video Idea / Location / Train Tip:</label>
-                    <textarea id="message" name="message" placeholder="Tell us about your idea, location, or special locomotive spot..." required></textarea>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-eye text-cn-red mr-1.5"></i> Track Visibility:</span>
+                        <span class="font-bold text-green-400" id="wpg-vis">Optimal</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-radio text-cn-red mr-1.5"></i> Main Freq:</span>
+                        <span class="font-mono text-gray-200">161.415 (Ch 1)</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-400"><i class="fa-solid fa-train text-cn-red mr-1.5"></i> Traffic Level:</span>
+                        <span class="font-semibold text-amber-400">High (Yard Switching)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giroux Card -->
+            <div class="bg-cn-card border border-cn-border rounded-2xl p-6 relative overflow-hidden shadow-xl hover:border-cn-red/50 transition">
+                <div class="absolute top-0 right-0 bg-amber-600 text-white text-[10px] font-black px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+                    Hotspot / Crossings
+                </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center text-cn-red text-2xl">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Giroux, MB</h3>
+                        <p class="text-xs text-gray-400 font-mono">Mile 112.4 • Mainline Railfan Spot</p>
+                    </div>
                 </div>
 
-                <button type="submit" class="submit-btn">Submit Idea</button>
+                <div class="grid grid-cols-2 gap-3 my-4 bg-cn-black/50 p-3 rounded-xl border border-white/5">
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Temperature</span>
+                        <span class="text-2xl font-black text-white" id="giroux-temp">--°C</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Wind</span>
+                        <span class="text-sm font-bold text-gray-200" id="giroux-wind">-- km/h</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-eye text-cn-red mr-1.5"></i> Track Visibility:</span>
+                        <span class="font-bold text-green-400" id="giroux-vis">Clear Sightlines</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-bullhorn text-cn-red mr-1.5"></i> Defect Detector:</span>
+                        <span class="font-mono text-gray-200">Mile 110.1</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-400"><i class="fa-solid fa-gauge-high text-cn-red mr-1.5"></i> Max Speed:</span>
+                        <span class="font-semibold text-gray-200">60 MPH (Freight)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rainy River Card -->
+            <div class="bg-cn-card border border-cn-border rounded-2xl p-6 relative overflow-hidden shadow-xl hover:border-cn-red/50 transition">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+                    Sub Limit / Border
+                </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center text-cn-red text-2xl">
+                        <i class="fa-solid fa-bridge-water"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Rainy River, ON</h3>
+                        <p class="text-xs text-gray-400 font-mono">Mile 0.0 • US/Canada Border</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 my-4 bg-cn-black/50 p-3 rounded-xl border border-white/5">
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Temperature</span>
+                        <span class="text-2xl font-black text-white" id="rr-temp">--°C</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-gray-400 block">Wind</span>
+                        <span class="text-sm font-bold text-gray-200" id="rr-wind">-- km/h</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-eye text-cn-red mr-1.5"></i> Track Visibility:</span>
+                        <span class="font-bold text-green-400" id="rr-vis">Good</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1 border-b border-white/5">
+                        <span class="text-gray-400"><i class="fa-solid fa-passport text-cn-red mr-1.5"></i> Border Crossing:</span>
+                        <span class="font-mono text-gray-200">International Bridge</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-400"><i class="fa-solid fa-arrows-split-up-and-left text-cn-red mr-1.5"></i> Sub Transition:</span>
+                        <span class="font-semibold text-gray-200">Fort Frances Sub</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gear & Radio Setup Section -->
+    <section id="gear-guide" class="py-16 bg-cn-card/50 border-y border-cn-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-cn-red font-bold uppercase tracking-wider text-xs">Trackside Equipment</span>
+                <h2 class="text-3xl font-extrabold text-white mt-1">Our Trackside Setup & Gear</h2>
+                <p class="text-gray-400 text-sm mt-2">The exact gear Noah & Ed rely on to catch high-speed freight trains along the CN Sprague Sub in harsh Manitoba and Ontario weather.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Highlight Feature: Radio Shack PRO-89 Scanner -->
+                <div class="lg:col-span-6 bg-cn-card border-2 border-cn-red/60 rounded-2xl p-6 shadow-2xl relative">
+                    <div class="absolute -top-3 right-6 bg-cn-red text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                        Primary Audio Gear
+                    </div>
+
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-16 h-16 bg-cn-red/10 border border-cn-red/30 rounded-2xl flex items-center justify-center text-cn-red text-3xl flex-shrink-0">
+                            <i class="fa-solid fa-walkie-talkie"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white">Radio Shack PRO-89 Scanner</h3>
+                            <p class="text-xs text-gray-400 font-mono mt-0.5">200-Channel 20-Bank Handheld VHF/UHF Scanner</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-300 leading-relaxed mb-6">
+                        Our trusted field scanner for tracking train dispatch messages, defect detector broadcasts, and crew callouts prior to train arrival at Giroux or Winnipeg.
+                    </p>
+
+                    <!-- Frequencies Table -->
+                    <div class="bg-cn-black/80 rounded-xl border border-cn-border p-4 space-y-3 font-mono text-xs">
+                        <div class="text-gray-400 font-sans font-bold text-xs uppercase tracking-wider border-b border-cn-border pb-2 flex justify-between">
+                            <span>Pre-Programmed Frequencies</span>
+                            <span class="text-cn-red">PRO-89 Preset</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-white font-bold block">161.415 MHz</span>
+                                <span class="text-[10px] text-gray-400">CN Channel 1 - Road Mainline</span>
+                            </div>
+                            <span class="px-2 py-1 bg-cn-red/20 text-cn-red font-bold rounded">Bank 1 / Ch 01</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-white/5">
+                            <div>
+                                <span class="text-white font-bold block">161.205 MHz</span>
+                                <span class="text-[10px] text-gray-400">CN Channel 2 - Dispatcher / Standby</span>
+                            </div>
+                            <span class="px-2 py-1 bg-gray-800 text-gray-300 font-bold rounded">Bank 1 / Ch 02</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-white/5">
+                            <div>
+                                <span class="text-white font-bold block">160.935 MHz</span>
+                                <span class="text-[10px] text-gray-400">Symington Yard Switching</span>
+                            </div>
+                            <span class="px-2 py-1 bg-gray-800 text-gray-300 font-bold rounded">Bank 1 / Ch 03</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video & Field Gear Cards -->
+                <div class="lg:col-span-6 space-y-4">
+                    <!-- Video Gear -->
+                    <div class="bg-cn-card border border-cn-border rounded-xl p-5 flex gap-4 items-center">
+                        <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-cn-red text-xl flex-shrink-0">
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white">4K High-Framerate Video Rig</h4>
+                            <p class="text-xs text-gray-400 mt-1">Ultra HD 60fps cameras tailored for fast-moving freight trains and smooth wheel-bogie slow-motion clips.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tripods -->
+                    <div class="bg-cn-card border border-cn-border rounded-xl p-5 flex gap-4 items-center">
+                        <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-cn-red text-xl flex-shrink-0">
+                            <i class="fa-solid fa-wind"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white">Heavy-Duty Wind-Resistant Tripods</h4>
+                            <p class="text-xs text-gray-400 mt-1">Weighted, reinforced legs capable of holding stable framing against prairie gusts and locomotive slipstream air displacement.</p>
+                        </div>
+                    </div>
+
+                    <!-- Microphones -->
+                    <div class="bg-cn-card border border-cn-border rounded-xl p-5 flex gap-4 items-center">
+                        <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center text-cn-red text-xl flex-shrink-0">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white">Directional Shotgun Microphones</h4>
+                            <p class="text-xs text-gray-400 mt-1">Deadcat wind-muff protected directional mics to capture horn echoes, EMD/GE diesel thumps, and track clatter without wind distortion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto-Updating YouTube Grid -->
+    <section id="videos" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-cn-border gap-4">
+            <div>
+                <span class="text-cn-red font-bold uppercase tracking-wider text-xs">Video Feed</span>
+                <h2 class="text-3xl font-extrabold text-white">Latest YouTube Uploads</h2>
+                <p class="text-gray-400 text-sm mt-1">Automatically pulled from Noah & Ed's official YouTube channel.</p>
+            </div>
+            <a href="https://www.youtube.com/@NoahNEdTrainAdventures" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-cn-red hover:bg-cn-darkred text-white text-xs font-bold rounded-lg transition flex items-center gap-2 self-start md:self-auto">
+                <i class="fa-brands fa-youtube"></i> View All on YouTube
+            </a>
+        </div>
+
+        <!-- Dynamic Grid Container -->
+        <div id="youtubeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading Skeleton -->
+            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden animate-pulse">
+                <div class="h-48 bg-gray-800"></div>
+                <div class="p-4 space-y-3">
+                    <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+                    <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+                </div>
+            </div>
+            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden animate-pulse">
+                <div class="h-48 bg-gray-800"></div>
+                <div class="p-4 space-y-3">
+                    <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+                    <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+                </div>
+            </div>
+            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden animate-pulse">
+                <div class="h-48 bg-gray-800"></div>
+                <div class="p-4 space-y-3">
+                    <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+                    <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Railfan Glossary -->
+    <section id="glossary" class="py-16 bg-cn-card/30 border-t border-cn-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-cn-red font-bold uppercase tracking-wider text-xs">Railfan Terminology</span>
+                    <h2 class="text-3xl font-extrabold text-white">Interactive Sprague Sub Glossary</h2>
+                    <p class="text-gray-400 text-sm mt-1">Master railroad scanner lingo, defect detector terms, and operational codes.</p>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <input type="text" id="glossarySearch" placeholder="Search terms (e.g., DPU, Defect)..." class="w-full bg-cn-card border border-cn-border rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cn-red transition">
+                </div>
+            </div>
+
+            <!-- Glossary Cards Grid -->
+            <div id="glossaryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Javascript will render term cards here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Idea Form & Discord Invite Dual Section -->
+    <section id="video-ideas" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Web3Forms Form -->
+            <div class="lg:col-span-7 bg-cn-card border border-cn-border rounded-2xl p-6 sm:p-8 shadow-2xl">
+                <div class="mb-6">
+                    <span class="text-cn-red font-bold uppercase tracking-wider text-xs">Community Input</span>
+                    <h2 class="text-2xl font-extrabold text-white mt-1">Submit Video Ideas & Train Tips</h2>
+                    <p class="text-gray-400 text-xs sm:text-sm mt-1">Spotted a special unit or foreign power heading toward Giroux? Suggest a location or video topic!</p>
+                </div>
+
+                <form action="https://api.web3forms.com/submit" method="POST" id="submissionForm" class="space-y-4">
+                    <input type="hidden" name="access_key" value="b50a8281-5ad6-4642-9740-d7fcd97b515c">
+                    <input type="hidden" name="subject" value="New Train Adventure Suggestion!">
+                    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Your Name / Handle</label>
+                            <input type="text" name="name" required placeholder="e.g. WinnipegRailfan" class="w-full bg-cn-black border border-cn-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cn-red transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Your Email</label>
+                            <input type="email" name="email" required placeholder="you@example.com" class="w-full bg-cn-black border border-cn-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cn-red transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Location / Sub Spot</label>
+                        <select name="location" class="w-full bg-cn-black border border-cn-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cn-red transition">
+                            <option value="Giroux, MB">Giroux, MB Crossing</option>
+                            <option value="Winnipeg / Symington">Winnipeg Terminal / Symington Yard</option>
+                            <option value="Rainy River, ON">Rainy River Border Crossing</option>
+                            <option value="Other Sprague Sub Location">Other Sprague Sub Location</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Idea or Tip Details</label>
+                        <textarea name="message" rows="4" required placeholder="Describe train details, unit numbers, special heritage locomotives, or video shooting locations..." class="w-full bg-cn-black border border-cn-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cn-red transition custom-scrollbar"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-cn-red hover:bg-cn-darkred text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-paper-plane"></i> Send Suggestion to Noah & Ed
+                    </button>
+                    <div id="formStatus" class="hidden text-center text-xs font-semibold py-2"></div>
+                </form>
+            </div>
+
+            <!-- Base 2 Crew Discord Card -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-indigo-950/40 via-cn-card to-cn-card border border-indigo-500/30 rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 text-indigo-500/10 text-9xl pointer-events-none">
+                    <i class="fa-brands fa-discord"></i>
+                </div>
+
+                <div>
+                    <div class="w-14 h-14 bg-indigo-600/20 border border-indigo-500/40 rounded-2xl flex items-center justify-center text-indigo-400 text-3xl mb-6">
+                        <i class="fa-brands fa-discord"></i>
+                    </div>
+
+                    <span class="text-indigo-400 font-bold uppercase tracking-wider text-xs">Join the Community</span>
+                    <h3 class="text-3xl font-black text-white mt-1">Base 2 Crew Discord</h3>
+                    <p class="text-gray-300 text-sm mt-3 leading-relaxed">
+                        Connect with Noah, Ed, and fellow Sprague Sub railfans in real-time. Share live defect detector alerts, radio scanner logs, photo spots, and upcoming train schedules.
+                    </p>
+
+                    <ul class="mt-6 space-y-2.5 text-xs text-gray-300 font-medium">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> Live trackside sighting alerts</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> Radio scanner frequency tips</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> Behind-the-scenes video previews</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-white/10">
+                    <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-brands fa-discord text-lg"></i> Accept Base 2 Crew Invite
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Staff Portal Modal -->
+    <div id="staffModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cn-card border border-cn-border w-full max-w-md rounded-2xl p-6 relative shadow-2xl">
+            <button onclick="closeModal('staffModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-cn-red/20 border border-cn-red/40 rounded-xl flex items-center justify-center text-cn-red">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Staff & Crew Portal</h3>
+                    <p class="text-xs text-gray-400">Authorized Noah & Ed Team Login</p>
+                </div>
+            </div>
+
+            <form id="staffLoginForm" onsubmit="handleStaffLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Passcode / Key</label>
+                    <input type="password" id="staffPasscode" required placeholder="Enter crew access code..." class="w-full bg-cn-black border border-cn-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cn-red">
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-cn-red hover:bg-cn-darkred text-white font-bold rounded-xl text-sm transition">
+                    Authenticate
+                </button>
             </form>
+            <div id="staffAuthMsg" class="mt-3 text-center text-xs font-bold"></div>
         </div>
-
-        <!-- Discord Section -->
-        <div class="discord-section">
-            <h2>Join the Base 2 Crew on Discord</h2>
-            <p>Talk railfanning, get live train updates, and connect with other CN Sprague Sub fans.</p>
-            <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" class="discord-btn">Join Our Discord Server</a>
-        </div>
-
     </div>
 
-    <footer>
-        <p>&copy; 2026 Noah and Ed's Train Adventures. Built for railfans.</p>
+    <!-- Footer -->
+    <footer class="bg-cn-card border-t border-cn-border py-8 px-4 sm:px-6 lg:px-8 mt-12 text-xs text-gray-400">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 bg-cn-red rounded flex items-center justify-center font-black text-xs text-white">
+                    CN
+                </div>
+                <span class="font-bold text-gray-200">Noah & Ed's Train Adventures</span>
+                <span class="text-gray-600">•</span>
+                <span>Sprague Subdivision Spotters</span>
+            </div>
+
+            <p class="text-center md:text-right">
+                Not affiliated with Canadian National Railway (CN). Trackside safety first—always stay behind railway property lines!
+            </p>
+        </div>
     </footer>
 
-    <!-- JAVASCRIPT TO FETCH VIDEOS AUTOMATICALLY -->
+    <!-- Application Scripts -->
     <script>
-        async function fetchLatestVideos() {
-            const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
-            const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`;
+        // Railfan Glossary Data
+        const glossaryData = [
+            {
+                term: "DPU (Distributed Power Unit)",
+                def: "Remotely controlled locomotive placed in the middle or end of a long train to assist with horsepower and braking pressure."
+            },
+            {
+                term: "Foreign Power",
+                def: "Locomotives belonging to non-CN railways (such as BNSF, Union Pacific, CPKC, or CSX) running on CN tracks."
+            },
+            {
+                term: "Defect Detector",
+                def: "Automated trackside sensors that scan passing trains for hot bearings, dragging equipment, or flat wheels, broadcasting audio alerts over VHF."
+            },
+            {
+                term: "Meet",
+                def: "When two opposing trains pass each other on a single-track subdivision using a siding."
+            },
+            {
+                term: "Intermodal",
+                def: "Freight trains carrying standardized shipping containers or semi-trailers (e.g. CN 100 series trains)."
+            },
+            {
+                term: "RTC (Rail Traffic Controller)",
+                def: "The railroad dispatcher responsible for controlling train movements, signals, and siding assignments across the Sprague Sub."
+            },
+            {
+                term: "AAR 87 (161.415 MHz)",
+                def: "Association of American Railroads channel designation for CN Channel 1 mainline road frequency in Canada."
+            }
+        ];
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Glossary Render & Search Filter
+        function renderGlossary(filterText = '') {
+            const container = document.getElementById('glossaryGrid');
+            container.innerHTML = '';
+
+            const filtered = glossaryData.filter(item => 
+                item.term.toLowerCase().includes(filterText.toLowerCase()) || 
+                item.def.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500 text-sm">No matching terms found.</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-cn-card border border-cn-border p-5 rounded-xl hover:border-cn-red/40 transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-2 text-cn-red">${item.term}</h4>
+                        <p class="text-xs text-gray-300 leading-relaxed">${item.def}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('glossarySearch').addEventListener('input', (e) => {
+            renderGlossary(e.target.value);
+        });
+
+        // Live YouTube Video Grid Loader
+        async function loadYouTubeVideos() {
+            const grid = document.getElementById('youtubeGrid');
+            const channelID = "UCzDVvHcpWnu510JRLGnK-qg";
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`;
+            const apiFeed = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
             try {
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiFeed);
                 const data = await response.json();
-                
-                if(data.status === 'ok') {
-                    const videoGrid = document.getElementById('auto-video-grid');
-                    videoGrid.innerHTML = ''; 
-                    
-                    const latestVideos = data.items.slice(0, 3);
-                    
-                    latestVideos.forEach(video => {
-                        const videoId = video.link.split('v=')[1];
-                        
-                        const videoCard = `
-                            <div class="video-card">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" title="${video.title}" allowfullscreen></iframe>
-                                <div class="video-info">
-                                    <h3>${video.title}</h3>
+
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    grid.innerHTML = '';
+                    const videos = data.items.slice(0, 6);
+
+                    videos.forEach(video => {
+                        // Extract YouTube Video ID
+                        const videoId = video.guid.replace('yt:video:', '') || video.link.split('v=')[1];
+                        const card = document.createElement('div');
+                        card.className = "bg-cn-card border border-cn-border rounded-xl overflow-hidden shadow-lg hover:border-cn-red/50 transition flex flex-col";
+                        card.innerHTML = `
+                            <div class="relative group">
+                                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" alt="${video.title}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+                                <a href="${video.link}" target="_blank" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                    <div class="w-12 h-12 bg-cn-red text-white rounded-full flex items-center justify-center text-xl shadow-lg">
+                                        <i class="fa-solid fa-play ml-1"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="p-4 flex flex-col justify-between flex-1">
+                                <h3 class="font-bold text-sm text-white line-clamp-2 mb-2">${video.title}</h3>
+                                <div class="flex items-center justify-between text-[11px] text-gray-400 mt-auto pt-2 border-t border-white/5">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i> ${new Date(video.pubDate).toLocaleDateString()}</span>
+                                    <a href="${video.link}" target="_blank" class="text-cn-red font-bold hover:underline">Watch <i class="fa-solid fa-arrow-right text-[9px]"></i></a>
                                 </div>
                             </div>
                         `;
-                        videoGrid.innerHTML += videoCard;
+                        grid.appendChild(card);
                     });
+                } else {
+                    throw new Error("No videos found");
                 }
-            } catch (error) {
-                document.getElementById('auto-video-grid').innerHTML = '<p>Error loading videos. Check out our YouTube channel directly!</p>';
+            } catch (err) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-cn-card border border-cn-border rounded-xl p-8 text-center">
+                        <i class="fa-brands fa-youtube text-4xl text-cn-red mb-3"></i>
+                        <h4 class="text-lg font-bold text-white">Visit Noah & Ed's YouTube Channel</h4>
+                        <p class="text-xs text-gray-400 mt-1 mb-4">Direct feed unavailable right now. Watch videos directly on YouTube!</p>
+                        <a href="https://www.youtube.com/@NoahNEdTrainAdventures" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-cn-red text-white font-bold text-xs rounded-lg">
+                            Open Channel
+                        </a>
+                    </div>
+                `;
             }
         }
 
-        fetchLatestVideos();
-    </script>
+        // Live Weather Status Fetcher
+        async function fetchLiveWeather() {
+            const spinner = document.getElementById('weatherSpinner');
+            spinner.classList.add('fa-spin');
 
+            // Coordinates for Winnipeg, Giroux, Rainy River
+            const coords = {
+                wpg: { lat: 49.8951, lon: -97.1384 },
+                giroux: { lat: 49.5667, lon: -96.5333 },
+                rr: { lat: 48.7208, lon: -94.5683 }
+            };
+
+            try {
+                // Fetch for Winnipeg
+                const wpgRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.wpg.lat}&longitude=${coords.wpg.lon}&current_weather=true`);
+                const wpgData = await wpgRes.json();
+                if (wpgData.current_weather) {
+                    document.getElementById('wpg-temp').innerText = `${Math.round(wpgData.current_weather.temperature)}°C`;
+                    document.getElementById('wpg-wind').innerText = `${Math.round(wpgData.current_weather.windspeed)} km/h`;
+                }
+
+                // Fetch for Giroux
+                const gRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.giroux.lat}&longitude=${coords.giroux.lon}&current_weather=true`);
+                const gData = await gRes.json();
+                if (gData.current_weather) {
+                    document.getElementById('giroux-temp').innerText = `${Math.round(gData.current_weather.temperature)}°C`;
+                    document.getElementById('giroux-wind').innerText = `${Math.round(gData.current_weather.windspeed)} km/h`;
+                }
+
+                // Fetch for Rainy River
+                const rrRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.rr.lat}&longitude=${coords.rr.lon}&current_weather=true`);
+                const rrData = await rrRes.json();
+                if (rrData.current_weather) {
+                    document.getElementById('rr-temp').innerText = `${Math.round(rrData.current_weather.temperature)}°C`;
+                    document.getElementById('rr-wind').innerText = `${Math.round(rrData.current_weather.windspeed)} km/h`;
+                }
+            } catch (e) {
+                console.log("Weather fallback active");
+            } finally {
+                setTimeout(() => spinner.classList.remove('fa-spin'), 500);
+            }
+        }
+
+        // Modal Handlers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function handleStaffLogin(e) {
+            e.preventDefault();
+            const msg = document.getElementById('staffAuthMsg');
+            msg.innerText = "Access Denied: Invalid Crew Passcode";
+            msg.className = "mt-3 text-center text-xs font-bold text-cn-red";
+        }
+
+        // Initial Load Actions
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGlossary();
+            loadYouTubeVideos();
+            fetchLiveWeather();
+        });
+    </script>
 </body>
 </html>

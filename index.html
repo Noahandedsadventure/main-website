@@ -1,362 +1,354 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noah and Ed's Train Adventures | CN Trains on the Sprague Sub</title>
-    <style>
-        /* Modern Dark Theme Styling */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cn: {
+                            red: '#e53935',
+                            darkred: '#b71c1c',
+                            black: '#0a0a0a',
+                            base: '#121212',
+                            card: '#1a1a1a',
+                            border: '#2a2a2a',
+                            text: '#e0e0e0',
+                            muted: '#9e9e9e'
+                        }
+                    },
+                    fontFamily: {
+                        oswald: ['Oswald', 'sans-serif'],
+                        roboto: ['Roboto', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'hazard': 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(229, 57, 53, 0.1) 10px, rgba(229, 57, 53, 0.1) 20px)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
         body {
             background-color: #121212;
             color: #e0e0e0;
-            line-height: 1.6;
+            font-family: 'Roboto', sans-serif;
         }
 
-        /* Navigation Bar */
-        nav {
-            background-color: #0a0a0a;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e53935;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Custom Scrollbar for industrial feel */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e53935;
         }
 
-        nav .logo {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background-color: transparent;
-            color: #ccc;
-            border: none;
-            padding: 8px 12px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .tab-btn:hover {
-            color: #e53935;
-        }
-
-        .tab-btn.active {
-            color: #e53935;
-            border-bottom: 2px solid #e53935;
-        }
-
-        /* Hero Section */
-        header {
-            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), 
-                        url('logo.jpg') center/cover no-repeat;
-            padding: 70px 20px;
-            text-align: center;
-            border-bottom: 4px solid #e53935;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            color: #cccccc;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-            min-height: 500px;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #ffffff;
-            border-left: 4px solid #e53935;
-            padding-left: 10px;
-        }
-
-        h3 {
-            color: #e53935;
-            margin-bottom: 10px;
-        }
-
-        /* Tab Content Logic */
+        /* Tab Transitions */
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s;
+            opacity: 0;
+            transform: translateY(10px);
         }
-
         .tab-content.active {
             display: block;
+            animation: fadeUp 0.4s ease-out forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Video Grid */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+        /* Nav Tab Border Animation */
+        .nav-btn {
+            position: relative;
         }
-
-        .video-card {
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-
-        .video-card iframe {
-            width: 100%;
-            height: 200px;
-            border: none;
-        }
-
-        .video-info {
-            padding: 15px;
-        }
-
-        .video-info h3 {
-            font-size: 1.1rem;
-            color: #ffffff;
-            margin-bottom: 0;
-        }
-
-        /* Content Sections */
-        .content-box {
-            background-color: #1e1e1e;
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            margin-bottom: 30px;
-            color: #ccc;
-        }
-        
-        .content-box p { margin-bottom: 15px; }
-
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #333;
-        }
-
-        .data-table th {
-            background-color: #2c2f33;
-            color: #fff;
-        }
-
-        .data-table td:first-child {
-            font-weight: bold;
-            color: #e53935;
-        }
-
-        /* Forms */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #ccc; }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            background-color: #121212;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: #fff;
-            outline: none;
-        }
-        .form-group input:focus, .form-group textarea:focus { border-color: #e53935; }
-        .form-group textarea { resize: vertical; min-height: 120px; }
-        
-        .submit-btn {
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
             background-color: #e53935;
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
+            transition: width 0.3s ease;
         }
-        .submit-btn:hover { background-color: #c62828; }
+        .nav-btn:hover::after, .nav-btn.active::after {
+            width: 100%;
+        }
 
-        footer {
-            text-align: center;
-            padding: 25px;
-            background-color: #0a0a0a;
-            color: #777;
-            border-top: 1px solid #222;
+        /* Table styling overrides */
+        .cn-table tr:nth-child(even) {
+            background-color: #161616;
+        }
+        .cn-table tr:hover {
+            background-color: #222;
         }
     </style>
 </head>
-<body>
+<body class="antialiased flex flex-col min-h-screen">
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#" class="logo">Noah & Ed's Train Adventures</a>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'home')">Home</button>
-            <button class="tab-btn" onclick="openTab(event, 'about')">About Us</button>
-            <button class="tab-btn" onclick="openTab(event, 'sprague')">Sprague Sub Guide</button>
-            <button class="tab-btn" onclick="openTab(event, 'gear')">Scanner & Gear</button>
-            <button class="tab-btn" onclick="openTab(event, 'contact')">Submit Idea</button>
+    <nav class="sticky top-0 z-50 bg-cn-black/95 backdrop-blur-sm border-b border-cn-red px-6 py-4 shadow-lg shadow-black/50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="#" class="font-oswald text-2xl font-bold text-white tracking-wider uppercase hover:text-cn-red transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cn-red"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                Noah & Ed's
+            </a>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-6 font-oswald tracking-wide">
+                <button class="nav-btn active text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" onclick="openTab(event, 'home')">Home</button>
+                <button class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" onclick="openTab(event, 'about')">About Us</button>
+                <button class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" onclick="openTab(event, 'sprague')">Sprague Sub Guide</button>
+                <button class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" onclick="openTab(event, 'gear')">Scanner & Gear</button>
+                <button class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" onclick="openTab(event, 'contact')">Submit Idea</button>
+            </div>
         </div>
     </nav>
 
-    <header>
-        <h1>Raw CN Power on the Sprague Sub</h1>
-        <p>Tracking heavy-haul Canadian National freight from Winnipeg to Rainy River.</p>
+    <header class="relative w-full h-[45vh] md:h-[55vh] flex items-center justify-center text-center px-4 overflow-hidden border-b-[6px] border-cn-red">
+        <!-- Background Image with Gradient Overlay -->
+        <div class="absolute inset-0 z-0">
+            <!-- Using a striking dark train image from Unsplash -->
+            <img src="https://images.unsplash.com/photo-1541427468627-c14d7a8d5006?q=80&w=2070&auto=format&fit=crop" alt="Freight Train" class="w-full h-full object-cover object-center" />
+            <div class="absolute inset-0 bg-gradient-to-t from-cn-base via-cn-black/80 to-cn-black/60"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto transform transition duration-500 hover:scale-[1.02]">
+            <div class="inline-block px-4 py-1 border-2 border-cn-red text-cn-red font-oswald tracking-[0.2em] text-sm uppercase mb-4 bg-black/50 backdrop-blur-md font-bold">
+                Heavy Haul Operations
+            </div>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-oswald font-bold text-white uppercase tracking-tight mb-4 drop-shadow-2xl">
+                Raw CN Power <br> <span class="text-cn-red">On The Sprague Sub</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-roboto font-light drop-shadow-md">
+                Tracking massive Canadian National freight from Winnipeg to Rainy River.
+            </p>
+        </div>
+        
+        <!-- Track Accent Lines -->
+        <div class="absolute bottom-0 left-0 w-full h-2 bg-hazard opacity-50 z-10"></div>
     </header>
 
-    <div class="container">
+    <main class="flex-grow container max-w-6xl mx-auto px-4 py-12">
 
         <!-- TAB 1: HOME (YouTube Feed) -->
         <div id="home" class="tab-content active">
-            <h2>Latest CN Catches</h2>
-            <p style="color: #aaa; margin-bottom: 20px;">Automatically updated with our newest YouTube uploads and livestreams.</p>
-            <div class="video-grid" id="auto-video-grid">
-                <p>Loading latest rail action...</p>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Latest CN Catches</h2>
             </div>
-            <div class="content-box" style="text-align: center;">
-                <h3>Join the Base 2 Crew</h3>
-                <p>Talk CN operations, share catches, and get live Sprague Sub updates.</p>
-                <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" style="display: inline-block; background-color: #5865F2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 10px;">Join Discord Server</a>
+            
+            <p class="text-cn-muted mb-8 text-lg">Automatically updated with our newest YouTube uploads and trackside livestreams.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" id="auto-video-grid">
+                <!-- Loading State -->
+                <div class="col-span-full flex justify-center py-12">
+                    <div class="animate-pulse flex flex-col items-center">
+                        <div class="w-12 h-12 border-4 border-cn-red border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p class="text-cn-muted font-oswald uppercase tracking-widest">Loading latest rail action...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 text-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-hazard opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-oswald font-bold text-white uppercase mb-3">Join the Base 2 Crew</h3>
+                    <p class="text-gray-400 mb-6 max-w-lg mx-auto">Talk CN operations, share catches, and get live Sprague Sub updates with fellow railfans.</p>
+                    <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" class="inline-flex items-center gap-2 bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-8 rounded-sm uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(88,101,242,0.3)] hover:shadow-[0_0_25px_rgba(88,101,242,0.6)] hover:-translate-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .02.059c.24.466.515.91.818 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/>
+                        </svg>
+                        Join Discord Server
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- TAB 2: ABOUT US -->
         <div id="about" class="tab-content">
-            <h2>About the Channel</h2>
-            <div class="content-box">
-                <h3>Who We Are</h3>
-                <p>Welcome to Noah & Ed's Train Adventures. We are dedicated railfans capturing the raw power and everyday operations of the Canadian National (CN) Railway. Whether it's massive mixed freights, priority intermodals, or local switching jobs, we are trackside to document it.</p>
-                <p>Noah acts as the Lead Editor and channel manager, ensuring the 4K footage looks crisp, while Ed co-hosts and handles field operations to make sure we're in the right spot when the heavy haulers roll through.</p>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">About the Channel</h2>
+            </div>
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 shadow-xl">
+                <h3 class="text-xl font-oswald font-bold text-cn-red uppercase mb-4 tracking-wide border-b border-cn-border pb-2 inline-block">Who We Are</h3>
+                <div class="space-y-6 text-gray-300 text-lg leading-relaxed mt-4">
+                    <p>Welcome to <span class="text-white font-bold">Noah & Ed's Train Adventures</span>. We are dedicated railfans capturing the raw power and everyday operations of the Canadian National (CN) Railway. Whether it's massive mixed freights, priority intermodals, or local switching jobs, we are trackside to document it.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-cn-base p-6 rounded-lg border-l-4 border-cn-red">
+                            <h4 class="font-oswald uppercase text-white text-xl mb-2">Noah</h4>
+                            <p class="text-sm text-gray-400">Acts as the Lead Editor and channel manager, ensuring the 4K footage looks crisp, color-graded, and properly mixed for the ultimate heavy-haul experience.</p>
+                        </div>
+                        <div class="bg-cn-base p-6 rounded-lg border-l-4 border-cn-red">
+                            <h4 class="font-oswald uppercase text-white text-xl mb-2">Ed</h4>
+                            <p class="text-sm text-gray-400">Co-hosts and handles field operations, scouting locations, and monitoring dispatch to make sure we're in the right spot when the heavy haulers roll through.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 3: SPRAGUE SUB GUIDE -->
         <div id="sprague" class="tab-content">
-            <h2>The CN Sprague Subdivision</h2>
-            <div class="content-box">
-                <p>The Sprague Sub is a critical artery for CN, moving massive volumes of freight between Western Canada and the United States. We track the action across our favorite hotspots.</p>
-                
-                <h3>Primary Catch Locations</h3>
-                <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
-                    <li><strong>Winnipeg / Symington Yard:</strong> The heart of the action. Great for catching trains assembling, yard jobs, and major departures.</li>
-                    <li><strong>Giroux, MB:</strong> Classic Manitoba countryside. Excellent open sightlines to catch high-speed through-freights.</li>
-                    <li><strong>Rainy River, ON:</strong> The eastern edge of our typical run, featuring beautiful scenery and border-crossing action.</li>
-                </ul>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">The CN Sprague Subdivision</h2>
+            </div>
+            
+            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden shadow-xl">
+                <div class="p-8">
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">The Sprague Sub is a critical artery for CN, moving massive volumes of freight between Western Canada and the United States. We track the action across our favorite hotspots along the line.</p>
+                    
+                    <h3 class="text-xl font-oswald font-bold text-cn-red uppercase mb-6 tracking-wide flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        Primary Catch Locations
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-4 p-4 rounded-lg bg-cn-base hover:bg-[#1f1f1f] transition-colors border border-transparent hover:border-cn-border">
+                            <div class="w-1.5 bg-cn-red rounded-full"></div>
+                            <div>
+                                <h4 class="font-bold text-white text-lg">Winnipeg / Symington Yard</h4>
+                                <p class="text-gray-400 mt-1">The heart of the action. Great for catching trains assembling, yard jobs, and major mainline departures.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-lg bg-cn-base hover:bg-[#1f1f1f] transition-colors border border-transparent hover:border-cn-border">
+                            <div class="w-1.5 bg-cn-red rounded-full"></div>
+                            <div>
+                                <h4 class="font-bold text-white text-lg">Giroux, MB</h4>
+                                <p class="text-gray-400 mt-1">Classic Manitoba countryside. Excellent open sightlines to catch high-speed through-freights throttling up.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-lg bg-cn-base hover:bg-[#1f1f1f] transition-colors border border-transparent hover:border-cn-border">
+                            <div class="w-1.5 bg-cn-red rounded-full"></div>
+                            <div>
+                                <h4 class="font-bold text-white text-lg">Rainy River, ON</h4>
+                                <p class="text-gray-400 mt-1">The eastern edge of our typical run, featuring beautiful scenery and international border-crossing action.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 4: SCANNER & GEAR -->
         <div id="gear" class="tab-content">
-            <h2>Trackside Gear & Communications</h2>
-            <div class="content-box">
-                <h3>Our Scanner Setup</h3>
-                <p>To stay ahead of the trains, we monitor dispatch and road channels using a <strong>Radio Shack PRO-89</strong> handheld scanner. Listening for hotbox defect detectors and RTC (Rail Traffic Control) clearances is the best way to know when CN power is heading our way.</p>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Trackside Gear & Comms</h2>
             </div>
             
-            <h3>CN Sprague Sub Frequencies</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Frequency (MHz)</th>
-                        <th>AAR Channel</th>
-                        <th>Usage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>161.415</td>
-                        <td>AAR 87</td>
-                        <td>CN Primary Road Channel (Main Comm)</td>
-                    </tr>
-                    <tr>
-                        <td>161.205</td>
-                        <td>AAR 73</td>
-                        <td>CN Train Standby / Dispatch</td>
-                    </tr>
-                    <tr>
-                        <td>160.935</td>
-                        <td>AAR 55</td>
-                        <td>Local Yard Operations / Switching</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 shadow-xl mb-8">
+                <h3 class="text-xl font-oswald font-bold text-cn-red uppercase mb-4 tracking-wide flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Our Scanner Setup
+                </h3>
+                <p class="text-gray-300 text-lg leading-relaxed">
+                    To stay ahead of the trains, we monitor dispatch and road channels using a <strong class="text-white bg-cn-base px-2 py-1 rounded border border-cn-border">Radio Shack PRO-89</strong> handheld scanner. Listening for hotbox defect detectors and RTC (Rail Traffic Control) clearances is the best way to know when CN power is throttling up and heading our way.
+                </p>
+            </div>
+            
+            <h3 class="text-2xl font-oswald font-bold text-white uppercase mb-4 tracking-wide pl-2 border-l-4 border-cn-red">CN Sprague Sub Frequencies</h3>
+            <div class="overflow-x-auto rounded-xl border border-cn-border shadow-xl">
+                <table class="w-full text-left border-collapse cn-table">
+                    <thead>
+                        <tr class="bg-[#222] border-b-2 border-cn-red text-white uppercase font-oswald tracking-wide text-sm">
+                            <th class="p-4">Frequency (MHz)</th>
+                            <th class="p-4">AAR Channel</th>
+                            <th class="p-4">Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300 font-medium">
+                        <tr class="border-b border-cn-border transition-colors">
+                            <td class="p-4 text-cn-red font-bold text-lg font-mono">161.415</td>
+                            <td class="p-4"><span class="bg-cn-base px-2 py-1 rounded text-sm border border-[#333]">AAR 87</span></td>
+                            <td class="p-4">CN Primary Road Channel (Main Comm)</td>
+                        </tr>
+                        <tr class="border-b border-cn-border transition-colors">
+                            <td class="p-4 text-cn-red font-bold text-lg font-mono">161.205</td>
+                            <td class="p-4"><span class="bg-cn-base px-2 py-1 rounded text-sm border border-[#333]">AAR 73</span></td>
+                            <td class="p-4">CN Train Standby / Dispatch</td>
+                        </tr>
+                        <tr class="transition-colors">
+                            <td class="p-4 text-cn-red font-bold text-lg font-mono">160.935</td>
+                            <td class="p-4"><span class="bg-cn-base px-2 py-1 rounded text-sm border border-[#333]">AAR 55</span></td>
+                            <td class="p-4">Local Yard Operations / Switching</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- TAB 5: SUBMIT IDEA -->
         <div id="contact" class="tab-content">
-            <h2>Submit a Video Idea</h2>
-            <div class="content-box">
-                <p>Know a great spot near Giroux, spotted a foreign unit leading a CN train, or have a video concept? Send it to Noah & Ed below!</p>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Submit a Video Idea</h2>
+            </div>
+            
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 shadow-xl max-w-3xl mx-auto">
+                <p class="text-gray-400 mb-8 text-lg text-center">Know a great spot near Giroux, spotted a foreign unit leading a CN train, or have a video concept? Send it to the crew!</p>
                 
-                <form action="https://api.web3forms.com/submit" method="POST">
+                <form action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
                     <input type="hidden" name="access_key" value="b50a8281-5ad6-4642-9740-d7fcd97b515c">
                     
-                    <div class="form-group">
-                        <label for="name">Your Name / Handle:</label>
-                        <input type="text" id="name" name="name" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-oswald uppercase tracking-wide text-gray-400 mb-2">Your Name / Handle</label>
+                            <input type="text" id="name" name="name" required class="w-full bg-cn-base border border-cn-border rounded-md px-4 py-3 text-white focus:outline-none focus:border-cn-red focus:ring-1 focus:ring-cn-red transition-all">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-oswald uppercase tracking-wide text-gray-400 mb-2">Contact Email</label>
+                            <input type="email" id="email" name="email" required class="w-full bg-cn-base border border-cn-border rounded-md px-4 py-3 text-white focus:outline-none focus:border-cn-red focus:ring-1 focus:ring-cn-red transition-all">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Contact Email:</label>
-                        <input type="email" id="email" name="email" required>
+                    
+                    <div>
+                        <label for="message" class="block text-sm font-oswald uppercase tracking-wide text-gray-400 mb-2">Train Tip / Location Details</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Spotted a cool CN consist or know a good crossing in Rainy River? Let us know!" required class="w-full bg-cn-base border border-cn-border rounded-md px-4 py-3 text-white focus:outline-none focus:border-cn-red focus:ring-1 focus:ring-cn-red transition-all resize-y"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="message">Train Tip / Location Details:</label>
-                        <textarea id="message" name="message" placeholder="Spotted a cool CN consist or know a good crossing in Rainy River? Let us know!" required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">Send to the Crew</button>
+                    
+                    <button type="submit" class="w-full bg-cn-red hover:bg-cn-darkred text-white font-oswald font-bold uppercase tracking-widest py-4 rounded-md transition-all hover:shadow-[0_0_20px_rgba(229,57,53,0.4)] hover:-translate-y-0.5">
+                        Send to the Crew
+                    </button>
                 </form>
             </div>
         </div>
 
-    </div>
+    </main>
 
-    <footer>
-        <p>&copy; 2026 Noah and Ed's Train Adventures. Documenting CN Power.</p>
+    <footer class="bg-cn-black border-t border-[#222] py-8 text-center mt-auto relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-hazard opacity-30"></div>
+        <div class="max-w-4xl mx-auto px-4">
+            <h4 class="font-oswald text-xl text-white uppercase tracking-wider mb-2">Noah & Ed's Train Adventures</h4>
+            <p class="text-cn-muted text-sm font-light uppercase tracking-widest">&copy; 2026 Documenting CN Power.</p>
+        </div>
     </footer>
 
-    <!-- JAVASCRIPT -->
     <script>
         // Tab Switching Logic
         function openTab(evt, tabId) {
@@ -364,12 +356,19 @@
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.remove("active");
             }
-            const tabBtns = document.getElementsByClassName("tab-btn");
+            
+            const tabBtns = document.getElementsByClassName("nav-btn");
             for (let i = 0; i < tabBtns.length; i++) {
                 tabBtns[i].classList.remove("active");
+                tabBtns[i].classList.add("text-cn-muted");
+                tabBtns[i].classList.remove("text-white");
             }
+            
             document.getElementById(tabId).classList.add("active");
+            
             evt.currentTarget.classList.add("active");
+            evt.currentTarget.classList.remove("text-cn-muted");
+            evt.currentTarget.classList.add("text-white");
         }
 
         // YouTube RSS Fetcher
@@ -391,10 +390,13 @@
                     latestVideos.forEach(video => {
                         const videoId = video.link.split('v=')[1];
                         const videoCard = `
-                            <div class="video-card">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" title="${video.title}" allowfullscreen></iframe>
-                                <div class="video-info">
-                                    <h3>${video.title}</h3>
+                            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden group hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(229,57,53,0.15)] hover:border-cn-red/50 transition-all duration-300">
+                                <div class="relative pt-[56.25%] w-full bg-cn-base">
+                                    <iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}" title="${video.title}" allowfullscreen></iframe>
+                                </div>
+                                <div class="p-5 border-t border-cn-border group-hover:border-cn-red/30 transition-colors">
+                                    <h3 class="font-bold text-white line-clamp-2 leading-snug group-hover:text-cn-red transition-colors">${video.title}</h3>
+                                    <p class="text-xs text-cn-muted mt-3 font-oswald uppercase tracking-widest border-t border-[#333] pt-3 inline-block w-full">Latest Catch</p>
                                 </div>
                             </div>
                         `;
@@ -402,7 +404,11 @@
                     });
                 }
             } catch (error) {
-                document.getElementById('auto-video-grid').innerHTML = '<p>Check out our latest catches on our YouTube channel!</p>';
+                document.getElementById('auto-video-grid').innerHTML = `
+                    <div class="col-span-full bg-cn-card border border-cn-border p-6 rounded-lg text-center">
+                        <p class="text-gray-300">Check out our latest catches on our <a href="https://youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" class="text-cn-red hover:underline font-bold">YouTube channel</a>!</p>
+                    </div>
+                `;
             }
         }
         

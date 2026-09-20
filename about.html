@@ -4,53 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Noah & Ed's Train Adventures</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cn: {
+                            red: '#e53935',
+                            darkred: '#b71c1c',
+                            black: '#0a0a0a',
+                            base: '#121212',
+                            card: '#1a1a1a',
+                            border: '#2a2a2a',
+                            text: '#e0e0e0',
+                            muted: '#9e9e9e'
+                        }
+                    },
+                    fontFamily: {
+                        oswald: ['Oswald', 'sans-serif'],
+                        roboto: ['Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* (Copy the same <style> block from your sprague-sub.html here) */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #121212; color: #e0e0e0; line-height: 1.6; }
-        nav { background-color: #0a0a0a; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e53935; }
-        nav .logo { font-size: 1.2rem; font-weight: bold; color: #fff; text-decoration: none; }
-        nav .nav-links a { color: #ccc; text-decoration: none; margin-left: 20px; font-weight: 500; transition: color 0.3s; }
-        nav .nav-links a:hover { color: #e53935; }
-        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-        h1 { color: #ffffff; margin-bottom: 20px; border-bottom: 2px solid #e53935; padding-bottom: 10px; }
-        .content-section { background-color: #1e1e1e; padding: 25px; border-radius: 8px; border: 1px solid #333; margin-bottom: 30px; }
-        .content-section h2 { color: #e53935; margin-bottom: 15px; }
-        .content-section p { margin-bottom: 15px; color: #ccc; }
-        footer { text-align: center; padding: 25px; background-color: #0a0a0a; color: #777; margin-top: 40px; border-top: 1px solid #222; }
+        body {
+            background: #121212;
+            color: #e0e0e0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .page-shell {
+            background: linear-gradient(180deg, rgba(10,10,10,0.9), rgba(18,18,18,1));
+        }
     </style>
 </head>
-<body>
-
-    <nav>
-        <a href="index.html" class="logo">Noah & Ed's Train Adventures</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="sprague-sub.html">The Sprague Sub</a>
-            <a href="about.html">About Us</a>
-            <a href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank">YouTube</a>
+<body class="page-shell min-h-screen">
+    <nav class="sticky top-0 z-50 bg-cn-black/95 backdrop-blur-sm border-b border-cn-red px-6 py-4 shadow-lg shadow-black/50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html" class="font-oswald text-2xl font-bold text-white tracking-wider uppercase hover:text-cn-red transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cn-red"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                Noah & Ed's
+            </a>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-6 font-oswald tracking-wide">
+                <a href="index.html" class="text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Home</a>
+                <a href="about.html" class="text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium border-b-2 border-cn-red">About Us</a>
+                <a href="sprague-sub.html" class="text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Sprague Sub Guide</a>
+                <a href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" class="text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">YouTube</a>
+            </div>
         </div>
     </nav>
 
-    <div class="container">
-        <h1>Meet the Crew</h1>
+    <header class="relative w-full h-[32vh] md:h-[38vh] flex items-center justify-center text-center px-4 overflow-hidden border-b-[6px] border-cn-red">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2071&auto=format&fit=crop" alt="CN train in motion" class="w-full h-full object-cover object-center" />
+            <div class="absolute inset-0 bg-gradient-to-t from-cn-base via-cn-black/80 to-cn-black/60"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <div class="inline-block px-4 py-1 border-2 border-cn-red text-cn-red font-oswald tracking-[0.2em] text-sm uppercase mb-4 bg-black/50 backdrop-blur-md font-bold">
+                Meet the Crew
+            </div>
+            <h1 class="text-4xl md:text-5xl font-oswald font-bold text-white uppercase tracking-tight">Railfans. Trackside. Real CN Action.</h1>
+        </div>
+    </header>
 
-        <div class="content-section">
-            <h2>Noah & Ed</h2>
-            <p>Welcome to our channel! We are passionate railfans dedicated to capturing the raw power of heavy-haul freight, primarily focusing on the CN Sprague Subdivision in Manitoba.</p>
-            <p>Our goal is to bring you high-quality videos of the best rail action we can find, from massive grain trains to fast-moving intermodals.</p>
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 shadow-xl">
+                <h2 class="text-2xl font-oswald font-bold text-cn-red uppercase tracking-wide mb-4">Who We Are</h2>
+                <p class="text-gray-300 text-lg leading-relaxed mb-4">Welcome to Noah & Ed's Train Adventures. We are dedicated railfans capturing the raw power and everyday rhythm of Canadian National operations across the Sprague Subdivision and beyond.</p>
+                <p class="text-gray-300 text-lg leading-relaxed">Whether it's a heavy grain train, a priority intermodal, or a quiet yard move, we document the moments that make modern railroading exciting.</p>
+            </div>
+
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8 shadow-xl">
+                <h2 class="text-2xl font-oswald font-bold text-cn-red uppercase tracking-wide mb-4">The Base 2 Crew</h2>
+                <p class="text-gray-300 text-lg leading-relaxed mb-4">The Base 2 Crew is our community of fellow rail enthusiasts who love scanner chatter, road channels, and a great trackside photo or video.</p>
+                <p class="text-gray-300 text-lg leading-relaxed">We share catches, compare notes, and keep each other posted on where the power is moving next.</p>
+            </div>
         </div>
 
-        <div class="content-section">
-            <h2>The Base 2 Crew</h2>
-            <p>The Base 2 Crew is our community of fellow rail enthusiasts. We love connecting with other railfans to share catches, scanner updates, and stories from trackside.</p>
-            <p>Be sure to join our Discord to become part of the crew!</p>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8">
+                <h3 class="text-xl font-oswald font-bold text-white uppercase mb-4 border-b border-cn-border pb-2">Noah</h3>
+                <p class="text-gray-400 leading-relaxed">Handles the editing, channel management, and post-production side of the videos to make each catch feel crisp, dynamic, and immersive.</p>
+            </div>
+            <div class="bg-cn-card border border-cn-border rounded-xl p-8">
+                <h3 class="text-xl font-oswald font-bold text-white uppercase mb-4 border-b border-cn-border pb-2">Ed</h3>
+                <p class="text-gray-400 leading-relaxed">Leads with field scouting, route knowledge, and the real-world trackside timing needed to get in the right place when the freight comes through.</p>
+            </div>
         </div>
-    </div>
 
-    <footer>
-        <p>&copy; 2026 Noah and Ed's Train Adventures.</p>
+        <div class="mt-12 bg-cn-card border border-cn-border rounded-xl p-8 text-center">
+            <h3 class="text-2xl font-oswald font-bold text-white uppercase mb-4">Join the Conversation</h3>
+            <p class="text-gray-400 max-w-2xl mx-auto mb-6">If you love CN rail action, railroad photography, or scanner updates, jump into the community and share your next catch.</p>
+            <a href="https://discord.com/invite/S9EEjTnTmt" target="_blank" class="inline-flex items-center gap-2 bg-cn-red hover:bg-cn-darkred text-white font-oswald font-bold uppercase tracking-widest py-3 px-8 rounded-md transition-all hover:-translate-y-0.5">Join Discord</a>
+        </div>
+    </main>
+
+    <footer class="bg-cn-black border-t border-[#222] py-8 text-center mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            <h4 class="font-oswald text-xl text-white uppercase tracking-wider mb-2">Noah & Ed's Train Adventures</h4>
+            <p class="text-cn-muted text-sm font-light uppercase tracking-widest">&copy; 2026 Documenting CN Power.</p>
+        </div>
     </footer>
-
 </body>
 </html>
+

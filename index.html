@@ -259,6 +259,30 @@
                             <div>
                                 <h4 class="font-bold text-white text-lg">Winnipeg / Symington Yard</h4>
                                 <p class="text-gray-400 mt-1">The heart of the action. Great for catching trains assembling, yard jobs, and major mainline departures.</p>
+
+                    <section class="mb-12">
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-2 h-8 bg-cn-red"></div>
+                            <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Trackside Briefing</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-cn-card border border-cn-border rounded-xl p-6">
+                                <p class="text-cn-red font-oswald uppercase tracking-widest text-sm mb-2">Route</p>
+                                <h3 class="text-xl font-oswald text-white uppercase mb-2">Sprague Sub</h3>
+                                <p class="text-gray-400">Following CN freight between Winnipeg and Rainy River.</p>
+                            </div>
+                            <div class="bg-cn-card border border-cn-border rounded-xl p-6">
+                                <p class="text-cn-red font-oswald uppercase tracking-widest text-sm mb-2">What We Chase</p>
+                                <h3 class="text-xl font-oswald text-white uppercase mb-2">CN Power</h3>
+                                <p class="text-gray-400">Grain, intermodal, manifest, and local action from the line.</p>
+                            </div>
+                            <div class="bg-cn-card border border-cn-border rounded-xl p-6">
+                                <p class="text-cn-red font-oswald uppercase tracking-widest text-sm mb-2">Get Involved</p>
+                                <h3 class="text-xl font-oswald text-white uppercase mb-2">Share a Sighting</h3>
+                                <p class="text-gray-400">Send the crew a tip or join the community for live updates.</p>
+                            </div>
+                        </div>
+                    </section>
                             </div>
                         </div>
                         <div class="flex gap-4 p-4 rounded-lg bg-cn-base hover:bg-[#1f1f1f] transition-colors border border-transparent hover:border-cn-border">
@@ -396,6 +420,28 @@
             evt.currentTarget.classList.add("text-white");
         }
 
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>'"]/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[character]));
+        }
+
+        function getYouTubeVideoId(link) {
+            try {
+                const url = new URL(link);
+                if (url.hostname === 'youtu.be') {
+                    return url.pathname.slice(1).split('/')[0];
+                }
+                return url.searchParams.get('v') || url.pathname.split('/').pop();
+            } catch (error) {
+                return null;
+            }
+        }
+
         // YouTube RSS Fetcher
         async function fetchLatestVideos() {
             const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
@@ -404,30 +450,43 @@
 
             try {
                 const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`YouTube feed request failed: ${response.status}`);
                 const data = await response.json();
                 
-                if(data.status === 'ok') {
-                    const videoGrid = document.getElementById('auto-video-grid');
-                    videoGrid.innerHTML = ''; 
-                    
-                    const latestVideos = data.items.slice(0, 3);
-                    
-                    latestVideos.forEach(video => {
-                        const videoId = video.link.split('v=')[1];
+                if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('YouTube feed returned no videos');
+
+                const videoGrid = document.getElementById('auto-video-grid');
+                videoGrid.innerHTML = ''; 
+                
+                const latestVideos = data.items.slice(0, 3);
+                
+                latestVideos.forEach(video => {
+                        const videoId = getYouTubeVideoId(video.link);
+                        if (!videoId) return;
+
+                        const safeTitle = escapeHtml(video.title);
+                        const isLive = /\b(live|livestream|live stream)\b/i.test(video.title);
+                        const watchLink = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+                        const thumbnail = video.thumbnail || `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`;
+                        const media = isLive
+                            ? `<a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 group/media">
+                                    <img src="${thumbnail}" alt="${safeTitle}" class="w-full h-full object-cover" loading="lazy">
+                                    <span class="absolute inset-0 flex items-center justify-center bg-black/45 text-white font-oswald uppercase tracking-widest group-hover/media:bg-black/25 transition-colors">Watch Live Replay</span>
+                               </a>`
+                            : `<iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}" title="${safeTitle}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                         const videoCard = `
                             <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden group hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(229,57,53,0.15)] hover:border-cn-red/50 transition-all duration-300">
                                 <div class="relative pt-[56.25%] w-full bg-cn-base">
-                                    <iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube.com/embed/${videoId}" title="${video.title}" allowfullscreen></iframe>
+                                    ${media}
                                 </div>
                                 <div class="p-5 border-t border-cn-border group-hover:border-cn-red/30 transition-colors">
-                                    <h3 class="font-bold text-white line-clamp-2 leading-snug group-hover:text-cn-red transition-colors">${video.title}</h3>
-                                    <p class="text-xs text-cn-muted mt-3 font-oswald uppercase tracking-widest border-t border-[#333] pt-3 inline-block w-full">Latest Catch</p>
+                                    <h3 class="font-bold text-white line-clamp-2 leading-snug group-hover:text-cn-red transition-colors">${safeTitle}</h3>
+                                    <a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs text-cn-red hover:text-white mt-3 font-oswald uppercase tracking-widest border-t border-[#333] pt-3 w-full">Watch on YouTube</a>
                                 </div>
                             </div>
                         `;
                         videoGrid.innerHTML += videoCard;
-                    });
-                }
+                });
             } catch (error) {
                 document.getElementById('auto-video-grid').innerHTML = `
                     <div class="col-span-full bg-cn-card border border-cn-border p-6 rounded-lg text-center">

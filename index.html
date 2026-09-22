@@ -102,24 +102,29 @@
         }
 
         .live-stream-link {
-            display: none;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             padding: 0.45rem 0.85rem;
-            border: 1px solid rgba(229, 57, 53, 0.8);
+            border: 1px solid rgba(229, 57, 53, 0.75);
             border-radius: 9999px;
-            background: rgba(229, 57, 53, 0.12);
+            background: rgba(229, 57, 53, 0.08);
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.08em;
             position: relative;
-            box-shadow: 0 0 16px rgba(229, 57, 53, 0.35);
-            animation: livePulse 1.8s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(229, 57, 53, 0.2);
+            opacity: 0.9;
+            transition: all 0.25s ease;
         }
 
-        .live-stream-link.is-visible {
-            display: inline-flex;
+        .live-stream-link.is-live {
+            background: rgba(229, 57, 53, 0.18);
+            color: #ffffff;
+            font-weight: 800;
+            box-shadow: 0 0 18px rgba(229, 57, 53, 0.55);
+            animation: livePulse 1.8s infinite ease-in-out;
         }
 
         @keyframes livePulse {
@@ -548,8 +553,9 @@
             const liveChat = document.getElementById('live-chat');
             const streamTitle = document.getElementById('stream-title');
 
+            liveNavLink.classList.remove('is-live');
+
             if (!API_KEY || API_KEY === 'YOUR_YOUTUBE_DATA_API_KEY') {
-                liveNavLink.classList.remove('is-visible');
                 liveSection.classList.remove('is-visible');
                 livePlayer.src = '';
                 liveChat.src = '';
@@ -569,7 +575,6 @@
                 const video = data.items && data.items[0];
 
                 if (!video) {
-                    liveNavLink.classList.remove('is-visible');
                     liveSection.classList.remove('is-visible');
                     livePlayer.src = '';
                     liveChat.src = '';
@@ -585,10 +590,9 @@
                 livePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
                 liveChat.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedDomain}`;
 
-                liveNavLink.classList.add('is-visible');
                 liveSection.classList.add('is-visible');
+                liveNavLink.classList.add('is-live');
             } catch (error) {
-                liveNavLink.classList.remove('is-visible');
                 liveSection.classList.remove('is-visible');
                 livePlayer.src = '';
                 liveChat.src = '';

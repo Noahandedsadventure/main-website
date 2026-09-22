@@ -101,6 +101,89 @@
             width: 100%;
         }
 
+        .live-stream-link {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.85rem;
+            border: 1px solid rgba(229, 57, 53, 0.8);
+            border-radius: 9999px;
+            background: rgba(229, 57, 53, 0.12);
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            position: relative;
+            box-shadow: 0 0 16px rgba(229, 57, 53, 0.35);
+            animation: livePulse 1.8s infinite ease-in-out;
+        }
+
+        .live-stream-link.is-visible {
+            display: inline-flex;
+        }
+
+        @keyframes livePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 12px rgba(229, 57, 53, 0.35);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 0 20px rgba(229, 57, 53, 0.7);
+            }
+        }
+
+        #livestream-section {
+            display: none;
+            margin-bottom: 3rem;
+        }
+
+        #livestream-section.is-visible {
+            display: block;
+        }
+
+        .live-stream-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .live-stream-dot {
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 9999px;
+            background: #e53935;
+            box-shadow: 0 0 15px rgba(229, 57, 53, 0.8);
+            animation: livePulse 1.4s infinite ease-in-out;
+        }
+
+        .live-stream-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .live-stream-grid iframe {
+            width: 100%;
+            min-height: 420px;
+            border: 1px solid rgba(229, 57, 53, 0.3);
+            background: #0a0a0a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 850px) {
+            .live-stream-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .live-stream-grid iframe {
+                min-height: 320px;
+            }
+        }
+
         /* Table styling overrides */
         .cn-table tr:nth-child(even) {
             background-color: #161616;
@@ -120,6 +203,7 @@
             </a>
             <div class="flex flex-wrap justify-center gap-2 md:gap-6 font-oswald tracking-wide">
                 <a href="index.html" class="nav-btn active text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Home</a>
+                <a id="live-nav-link" href="#livestream-section" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
                 <a href="about.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">About Us</a>
                 <a href="sprague-sub.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Sprague Sub Guide</a>
                 <a href="gear.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Scanner & Gear</a>
@@ -153,6 +237,18 @@
     </header>
 
     <main class="flex-grow container max-w-6xl mx-auto px-4 py-12">
+
+        <section id="livestream-section" aria-live="polite">
+            <div class="live-stream-header">
+                <div class="live-stream-dot"></div>
+                <h2 id="stream-title" class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Checking for live stream...</h2>
+            </div>
+
+            <div class="live-stream-grid">
+                <iframe id="live-player" title="Live stream player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <iframe id="live-chat" title="Live stream chat" src="" allow="clipboard-write; encrypted-media;" ></iframe>
+            </div>
+        </section>
 
         <!-- TAB 1: HOME (YouTube Feed) -->
         <div id="home" class="tab-content active">
@@ -400,7 +496,9 @@
     </footer>
 
     <script>
-        // Tab Switching Logic
+        const API_KEY = 'AIzaSyDzXrJHFeiuBP5w6H7pT6KGrFY7q_UGn4A';
+        const CHANNEL_ID = 'UCzDVvHcpWnu510JRLGnK-qg';
+
         function openTab(evt, tabId) {
             const tabContents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < tabContents.length; i++) {
@@ -422,12 +520,12 @@
         }
 
         function escapeHtml(value) {
-            return String(value).replace(/[&<>'"]/g, character => ({
+            return String(value).replace(/[&<>"']/g, character => ({
                 '&': '&amp;',
                 '<': '&lt;',
                 '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
+                '"': '&quot;',
+                "'": '&#39;'
             }[character]));
         }
 
@@ -440,6 +538,61 @@
                 return url.searchParams.get('v') || url.pathname.split('/').pop();
             } catch (error) {
                 return null;
+            }
+        }
+
+        async function checkLiveStatus() {
+            const liveNavLink = document.getElementById('live-nav-link');
+            const liveSection = document.getElementById('livestream-section');
+            const livePlayer = document.getElementById('live-player');
+            const liveChat = document.getElementById('live-chat');
+            const streamTitle = document.getElementById('stream-title');
+
+            if (!API_KEY || API_KEY === 'YOUR_YOUTUBE_DATA_API_KEY') {
+                liveNavLink.classList.remove('is-visible');
+                liveSection.classList.remove('is-visible');
+                livePlayer.src = '';
+                liveChat.src = '';
+                streamTitle.textContent = 'Live stream unavailable';
+                return;
+            }
+
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`YouTube API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const video = data.items && data.items[0];
+
+                if (!video) {
+                    liveNavLink.classList.remove('is-visible');
+                    liveSection.classList.remove('is-visible');
+                    livePlayer.src = '';
+                    liveChat.src = '';
+                    streamTitle.textContent = 'No live stream right now';
+                    return;
+                }
+
+                const videoId = video.id.videoId;
+                const title = video.snippet.title;
+                const embedDomain = window.location.hostname;
+
+                streamTitle.textContent = title;
+                livePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                liveChat.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedDomain}`;
+
+                liveNavLink.classList.add('is-visible');
+                liveSection.classList.add('is-visible');
+            } catch (error) {
+                liveNavLink.classList.remove('is-visible');
+                liveSection.classList.remove('is-visible');
+                livePlayer.src = '';
+                liveChat.src = '';
+                streamTitle.textContent = 'Live stream unavailable';
             }
         }
 
@@ -496,9 +649,12 @@
                 `;
             }
         }
-        
-        // Load videos on startup
-        fetchLatestVideos();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLatestVideos();
+            checkLiveStatus();
+            setInterval(checkLiveStatus, 120000);
+        });
     </script>
 
 </body>

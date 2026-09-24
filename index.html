@@ -403,6 +403,12 @@
             }
         }
 
+        function isUnavailableYouTubeVideo(video) {
+            const videoText = `${video.title || ''} ${video.description || ''}`;
+            return /\b(private video|deleted video|removed video|video unavailable|video not available)\b/i.test(videoText)
+                || /\[deleted\]|\[private\]/i.test(videoText);
+        }
+
         async function checkLiveStatus() {
             const liveNavLink = document.getElementById('live-nav-link');
             const liveSection = document.getElementById('livestream-section');
@@ -473,7 +479,9 @@
                 const videoGrid = document.getElementById('auto-video-grid');
                 videoGrid.innerHTML = ''; 
                 
-                const latestVideos = data.items.slice(0, 3);
+                const latestVideos = data.items
+                    .filter(video => !isUnavailableYouTubeVideo(video))
+                    .slice(0, 3);
                 
                 latestVideos.forEach(video => {
                         const videoId = getYouTubeVideoId(video.link);

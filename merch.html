@@ -1,0 +1,338 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Merch | Noah & Ed's Train Adventures</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0f14;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            background: #111820;
+            border-bottom: 2px solid #2d3945;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .back-button {
+            color: #ffffff;
+            text-decoration: none;
+            background: #1d2732;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #2b3947;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 90px 20px 70px;
+            background:
+                linear-gradient(
+                    rgba(11, 15, 20, 0.88),
+                    rgba(11, 15, 20, 0.96)
+                );
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            color: #b9c3cc;
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        /* MERCH SECTION */
+        .merch-container {
+            width: min(1100px, 90%);
+            margin: 0 auto;
+            padding: 40px 0 100px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #8f9aa5;
+        }
+
+        /* EMPTY MERCH AREA */
+        .merch-coming-soon {
+            min-height: 360px;
+            border: 2px dashed #35424f;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            background: #10161d;
+        }
+
+        .coming-soon-content {
+            max-width: 600px;
+        }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .coming-soon-content h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .coming-soon-content p {
+            color: #9ca8b3;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* FUTURE PRODUCT GRID */
+        /*
+            When you're ready to add products, you can use:
+
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="YOUR-IMAGE.jpg" alt="Product name">
+
+                    <h3>Product Name</h3>
+                    <p>$00.00</p>
+
+                    <a href="YOUR-SHOPIFY-PRODUCT-LINK"
+                       target="_blank"
+                       class="shop-button">
+                        SHOP NOW
+                    </a>
+                </div>
+            </div>
+        */
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: #111820;
+            border: 1px solid #2d3945;
+            border-radius: 14px;
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+
+        .product-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .product-card h3,
+        .product-card p,
+        .product-card a {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .product-card h3 {
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        .product-card p {
+            color: #aab4bd;
+            margin-bottom: 18px;
+        }
+
+        .shop-button {
+            display: inline-block;
+            background: #ffffff;
+            color: #0b0f14;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 11px 18px;
+            border-radius: 7px;
+            transition: 0.2s;
+        }
+
+        .shop-button:hover {
+            transform: translateY(-2px);
+            background: #dfe6eb;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid #27323d;
+            background: #0a0e13;
+            text-align: center;
+            padding: 30px 20px;
+            color: #78838e;
+            line-height: 1.6;
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            header {
+                padding: 15px;
+            }
+
+            .hero {
+                padding: 65px 20px 50px;
+            }
+
+            .merch-coming-soon {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="logo">
+            Noah & Ed's Train Adventures
+        </a>
+
+        <a href="index.html" class="back-button">
+            ← Back to Main Site
+        </a>
+    </header>
+
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>MERCH</h1>
+
+        <p>
+            Official Noah & Ed's Train Adventures merchandise.
+            Check back here for future products and gear.
+        </p>
+    </section>
+
+
+    <!-- MERCH -->
+    <main class="merch-container">
+
+        <div class="section-title">
+            <h2>Our Merch</h2>
+            <p>Official merchandise will appear here when available.</p>
+        </div>
+
+
+        <!--
+            EMPTY PRODUCT AREA
+
+            Products can be added here later.
+
+            Example:
+
+            <div class="product-grid">
+
+                <div class="product-card">
+
+                    <img src="images/shirt.jpg"
+                         alt="Noah & Ed's Train Adventures Shirt">
+
+                    <h3>Noah & Ed's Shirt</h3>
+
+                    <p>$24.99 CAD</p>
+
+                    <a
+                        href="https://YOUR-SHOPIFY-LINK"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="shop-button">
+                        SHOP NOW
+                    </a>
+
+                </div>
+
+            </div>
+        -->
+
+
+        <div class="merch-coming-soon">
+
+            <div class="coming-soon-content">
+
+                <div class="coming-soon-icon">
+                    🚂
+                </div>
+
+                <h3>Merch Coming Soon</h3>
+
+                <p>
+                    We're working on some official Noah & Ed's Train Adventures
+                    merchandise. Products and shopping links will be added here
+                    when they're ready.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            © 2026 Noah & Ed's Train Adventures
+        </p>
+
+        <p>
+            All rights reserved.
+        </p>
+    </footer>
+
+</body>
+</html>
+```

@@ -1,46 +1,514 @@
-<section class="merch-container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div class="section-title">
-        <h2>Our Merch</h2>
-        <p>Official Noah & Ed's Train Adventures merchandise.</p>
-    </div>
+    <title>Merch | Noah & Ed's Train Adventures</title>
 
-    <div class="product-grid">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <!-- HAT -->
-        <div class="product-card">
+        html {
+            scroll-behavior: smooth;
+        }
 
-            <div class="product-image">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0f14;
+            color: #ffffff;
+            min-height: 100vh;
+        }
 
-                <img
-                    src="images/noah-and-eds-hat.jpg"
-                    alt="Noah & Ed's Train Adventures Hat"
-                >
+        /* =========================
+           HEADER
+        ========================= */
 
-                <div class="out-of-stock">
-                    NOT IN STOCK
-                </div>
+        header {
+            width: 100%;
+            background: #111820;
+            border-bottom: 2px solid #2d3945;
 
-            </div>
+            padding: 18px 35px;
 
-            <div class="product-info">
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-                <h3>Noah & Ed's Train Adventures Hat</h3>
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-                <p class="product-description">
-                    Official Noah & Ed's Train Adventures hat
-                    featuring the Noah & Ed's logo.
-                </p>
+        .site-name {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
 
-                <div class="product-status">
-                    <span class="status-dot"></span>
-                    Not in stock
-                </div>
+        .back-button {
+            display: inline-block;
 
-            </div>
+            color: #ffffff;
+            background: #25313c;
+
+            text-decoration: none;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            font-weight: 600;
+
+            transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+            background: #394956;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            text-align: center;
+
+            padding: 90px 20px 70px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #111820 0%,
+                    #0b0f14 100%
+                );
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+
+            letter-spacing: 4px;
+
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            color: #aeb8c1;
+
+            font-size: 1.1rem;
+
+            max-width: 650px;
+
+            margin: 0 auto;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           MERCH SECTION
+        ========================= */
+
+        .merch-container {
+            width: min(1100px, 92%);
+
+            margin: 0 auto;
+
+            padding: 30px 0 100px;
+        }
+
+        .section-title {
+            text-align: center;
+
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #8f9ba6;
+
+            font-size: 1rem;
+        }
+
+
+        /* =========================
+           PRODUCT GRID
+        ========================= */
+
+        .product-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(280px, 380px)
+                );
+
+            justify-content: center;
+
+            gap: 30px;
+        }
+
+
+        /* =========================
+           PRODUCT CARD
+        ========================= */
+
+        .product-card {
+            background: #111820;
+
+            border: 1px solid #2d3945;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.35);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+
+        /* =========================
+           PRODUCT IMAGE
+        ========================= */
+
+        .product-image {
+            position: relative;
+
+            width: 100%;
+
+            aspect-ratio: 1 / 1;
+
+            background: #eeeeee;
+
+            overflow: hidden;
+        }
+
+        .product-image img {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+
+        /* =========================
+           OUT OF STOCK BADGE
+        ========================= */
+
+        .out-of-stock {
+            position: absolute;
+
+            top: 18px;
+            right: 18px;
+
+            background: #222a32;
+
+            color: #ffffff;
+
+            padding: 10px 15px;
+
+            border-radius: 7px;
+
+            font-size: 0.75rem;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* =========================
+           PRODUCT INFORMATION
+        ========================= */
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 1.35rem;
+
+            margin-bottom: 12px;
+        }
+
+        .product-description {
+            color: #9ca8b2;
+
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =========================
+           STOCK STATUS
+        ========================= */
+
+        .product-status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #b9c2c9;
+
+            font-size: 0.95rem;
+
+            font-weight: 600;
+        }
+
+        .status-dot {
+            display: inline-block;
+
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #777777;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #080c10;
+
+            border-top: 1px solid #29343e;
+
+            text-align: center;
+
+            padding: 30px 20px;
+
+            color: #707b85;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px 18px;
+            }
+
+            .site-name {
+                font-size: 1rem;
+            }
+
+            .back-button {
+                padding: 8px 12px;
+
+                font-size: 0.85rem;
+            }
+
+            .hero {
+                padding: 60px 20px 45px;
+            }
+
+            .hero h1 {
+                letter-spacing: 2px;
+            }
+
+            .merch-container {
+                width: 90%;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header>
+
+        <a
+            href="index.html"
+            class="site-name"
+        >
+            Noah & Ed's Train Adventures
+        </a>
+
+
+        <a
+            href="index.html"
+            class="back-button"
+        >
+            ← Back to Main Site
+        </a>
+
+    </header>
+
+
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="hero">
+
+        <h1>MERCH</h1>
+
+        <p>
+            Official Noah & Ed's Train Adventures merchandise.
+        </p>
+
+    </section>
+
+
+
+    <!-- =========================
+         MERCH
+    ========================== -->
+
+    <main class="merch-container">
+
+
+        <div class="section-title">
+
+            <h2>Our Merch</h2>
+
+            <p>
+                Official Noah & Ed's Train Adventures merchandise.
+            </p>
 
         </div>
 
-    </div>
 
-</section>
+
+        <!-- =========================
+             PRODUCTS
+        ========================== -->
+
+        <div class="product-grid">
+
+
+            <!-- HAT -->
+
+            <div class="product-card">
+
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="product-image">
+
+                    <img
+                        src="noah-and-eds-hat.jpg"
+                        alt="Noah & Ed's Train Adventures Hat"
+                    >
+
+
+                    <!-- STOCK BADGE -->
+
+                    <div class="out-of-stock">
+                        NOT IN STOCK
+                    </div>
+
+                </div>
+
+
+
+                <!-- PRODUCT INFORMATION -->
+
+                <div class="product-info">
+
+
+                    <h3>
+                        Noah & Ed's Train Adventures Hat
+                    </h3>
+
+
+                    <p class="product-description">
+                        Official Noah & Ed's Train Adventures
+                        hat featuring the Noah & Ed's logo.
+                    </p>
+
+
+                    <!-- STOCK STATUS -->
+
+                    <div class="product-status">
+
+                        <span class="status-dot"></span>
+
+                        Not in stock
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Noah & Ed's Train Adventures
+        </p>
+
+        <p>
+            All rights reserved.
+        </p>
+
+    </footer>
+
+
+</body>
+</html>

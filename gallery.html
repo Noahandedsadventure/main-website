@@ -47,12 +47,39 @@
             </div>
         </section>
 
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full bg-cn-card border border-cn-border rounded-xl p-10 text-center">
-                <div class="w-16 h-16 mx-auto mb-5 border-2 border-cn-red rounded-full flex items-center justify-center text-cn-red text-2xl">+</div>
-                <h3 class="text-2xl font-oswald font-bold text-white uppercase mb-3">Your gallery starts here</h3>
-                <p class="text-gray-400 max-w-xl mx-auto leading-relaxed">Place your train photos in <span class="text-white font-medium">gallery/photos</span>, then add them to this page as you build your collection.</p>
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid">
+            <article class="group overflow-hidden rounded-xl border border-cn-border bg-cn-card shadow-xl hover:border-cn-red/50 transition-all duration-300">
+                <div class="aspect-[4/3] overflow-hidden bg-cn-base">
+                    <img src="gallery/photos/logo.jpg" alt="Noah & Ed's Train Adventures logo" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="p-5">
+                    <p class="text-cn-red font-oswald uppercase tracking-[0.18em] text-xs mb-2">Brand</p>
+                    <h3 class="text-xl font-oswald text-white uppercase">Official Channel Mark</h3>
+                </div>
+            </article>
+
+            <article class="group overflow-hidden rounded-xl border border-cn-border bg-cn-card shadow-xl hover:border-cn-red/50 transition-all duration-300">
+                <div class="aspect-[4/3] overflow-hidden bg-cn-base">
+                    <img src="gallery/photos/noah-and-eds-hat.jpg" alt="Noah and Ed's hat" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                </div>
+                <div class="p-5">
+                    <p class="text-cn-red font-oswald uppercase tracking-[0.18em] text-xs mb-2">Merch</p>
+                    <h3 class="text-xl font-oswald text-white uppercase">Base 2 Crew Gear</h3>
+                </div>
+            </article>
+        </section>
+
+        <section class="mt-12 rounded-xl border border-cn-border bg-cn-card p-8">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-2 h-8 bg-cn-red"></div>
+                <h3 class="text-2xl font-oswald font-bold text-white uppercase tracking-wide">Add More Photos</h3>
             </div>
+            <ol class="list-decimal list-inside space-y-3 text-gray-300 leading-relaxed pl-2">
+                <li>Place any new image files inside the <span class="text-white font-medium">gallery/photos</span> folder.</li>
+                <li>Add a new card to the gallery by copying one of the existing article blocks in this page.</li>
+                <li>Change the image source to the new file path, such as <span class="text-white font-medium">gallery/photos/your-photo.jpg</span>.</li>
+                <li>Keep the title and category text updated so the page stays organized.</li>
+            </ol>
         </section>
     </main>
 

@@ -88,6 +88,24 @@
             </div>
         </section>
 
+        <section class="mb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
+                <div class="bg-cn-card border border-cn-border rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+                    <p class="text-cn-red font-oswald uppercase tracking-[0.22em] text-xs mb-4">Featured Trackside Moment</p>
+                    <h2 class="text-3xl md:text-4xl font-oswald font-bold text-white uppercase leading-tight mb-4">Built for the heavy haul crew.</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">From the Sprague Sub to the edge of the border, we document the power, the pace, and the people behind the railfan lifestyle.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="gallery.html" class="inline-flex items-center justify-center bg-cn-red hover:bg-cn-darkred text-white font-oswald uppercase tracking-[0.18em] px-5 py-3 rounded-md transition-all hover:-translate-y-0.5">View Gallery</a>
+                        <a href="video.html" class="inline-flex items-center justify-center border border-cn-border bg-cn-base hover:border-cn-red text-white font-oswald uppercase tracking-[0.18em] px-5 py-3 rounded-md transition-colors">Watch Videos</a>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl border border-cn-red/30 bg-cn-card shadow-[0_20px_60px_rgba(229,57,53,0.12)]">
+                    <img src="gallery/photos/noah-and-eds-hat.jpg" alt="Noah & Ed's Train Adventures gear" class="w-full h-full object-cover aspect-[4/3]">
+                </div>
+            </div>
+        </section>
+
         <!-- TAB 1: HOME (YouTube Feed) -->
         <div id="home" class="tab-content active">
             <div class="flex items-center gap-3 mb-8">
@@ -325,11 +343,22 @@
 
     </main>
 
-    <footer class="bg-cn-black border-t border-[#222] py-8 text-center mt-auto relative overflow-hidden">
+    <footer class="bg-cn-black border-t border-[#222] py-10 mt-auto relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-hazard opacity-30"></div>
-        <div class="max-w-4xl mx-auto px-4">
-            <h4 class="font-oswald text-xl text-white uppercase tracking-wider mb-2">Noah & Ed's Train Adventures</h4>
-            <p class="text-cn-muted text-sm font-light uppercase tracking-widest">&copy; 2026 Documenting CN Power.</p>
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+                <div>
+                    <h4 class="font-oswald text-xl text-white uppercase tracking-wider mb-2">Noah & Ed's Train Adventures</h4>
+                    <p class="text-cn-muted text-sm font-light uppercase tracking-widest">&copy; 2026 Documenting CN Power.</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 text-xs font-oswald uppercase tracking-[0.18em] text-cn-muted">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                    <a href="gallery.html" class="hover:text-white transition-colors">Gallery</a>
+                    <a href="video.html" class="hover:text-white transition-colors">Videos</a>
+                    <a href="contact.html" class="hover:text-white transition-colors">Submit Idea</a>
+                </div>
+            </div>
         </div>
     </footer>
 

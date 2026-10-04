@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build/cache output
+.npm/
+.cache/
+dist/
+coverage/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local environment files
+.env
+.env.*
+!.env.example

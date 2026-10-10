@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1120">
+<title>Camera Barcode Reader</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:#0b1120;color:#f8fafc}main{max-width:760px;margin:auto;padding:24px 16px 40px}h1{margin-bottom:8px}.muted{color:#cbd5e1;line-height:1.5}.panel{background:#111c31;border:1px solid #263650;border-radius:16px;padding:16px;margin-top:18px}video{display:block;width:100%;max-height:55vh;background:#020617;border-radius:12px;object-fit:cover}.buttons{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}button{border:0;border-radius:10px;padding:12px 16px;font-size:1rem;font-weight:650;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}#start{background:#38bdf8;color:#082f49}#stop,#copy{background:#334155;color:#f8fafc}#status{min-height:1.5em}#result{overflow-wrap:anywhere;font-size:1.15rem;color:#7dd3fc}label{display:block;margin-bottom:8px;color:#cbd5e1}select{background:#0b1120;color:white;padding:10px;border-radius:8px;max-width:100%;width:100%}.small{font-size:.9rem;color:#94a3b8}
+</style>
+</head>
+<body><main>
+<h1>📷 Camera Barcode Reader</h1>
+<p class="muted">Scan product barcodes and QR codes with your device camera. Hold the code steady inside the camera view.</p>
+<section class="panel">
+<label for="camera">Camera</label><select id="camera"><option value="">Default camera</option></select>
+<div class="buttons"><button id="start">Start scanner</button><button id="stop" disabled>Stop camera</button></div>
+<video id="video" muted playsinline></video>
+<p id="status" role="status" aria-live="polite">Press “Start scanner” and allow camera access.</p>
+</section>
+<section class="panel"><h2>Last scan</h2><p id="result">Nothing scanned yet.</p><p id="format" class="small"></p><div class="buttons"><button id="copy" disabled>Copy result</button></div><p class="small">Scanned values stay in this page and are not sent to a server by this demo.</p></section>
+</main>
+<script type="module">
+import { BrowserMultiFormatReader, BarcodeFormat, DecodeHintType } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/+esm';
+const video=document.getElementById('video'),cameraSelect=document.getElementById('camera'),startButton=document.getElementById('start'),stopButton=document.getElementById('stop'),copyButton=document.getElementById('copy'),status=document.getElementById('status'),result=document.getElementById('result'),format=document.getElementById('format');
+const hints=new Map();hints.set(DecodeHintType.POSSIBLE_FORMATS,[BarcodeFormat.EAN_13,BarcodeFormat.EAN_8,BarcodeFormat.UPC_A,BarcodeFormat.UPC_E,BarcodeFormat.CODE_128,BarcodeFormat.CODE_39,BarcodeFormat.ITF,BarcodeFormat.QR_CODE,BarcodeFormat.DATA_MATRIX,BarcodeFormat.PDF_417,BarcodeFormat.CODABAR]);
+const reader=new BrowserMultiFormatReader(hints,250);let controls=null,lastText='',seenText='',seenAt=0;
+async function loadCameras(){try{const devices=await BrowserMultiFormatReader.listVideoInputDevices(),previous=cameraSelect.value;cameraSelect.replaceChildren();if(!devices.length){cameraSelect.add(new Option('No camera found',''));return}devices.forEach((d,i)=>cameraSelect.add(new Option(d.label||'Camera '+(i+1),d.deviceId)));if(previous&&devices.some(d=>d.deviceId===previous))cameraSelect.value=previous;else{const back=devices.find(d=>/back|rear|environment/i.test(d.label));if(back)cameraSelect.value=back.deviceId}}catch(e){status.textContent='Could not list cameras. Check permission and use HTTPS or localhost.'}}
+async function stopScanner(){if(controls){controls.stop();controls=null}reader.reset();video.pause();video.srcObject?.getTracks().forEach(t=>t.stop());video.srcObject=null;startButton.disabled=false;stopButton.disabled=true}
+async function startScanner(){await stopScanner();status.textContent='Requesting camera access…';startButton.disabled=true;try{controls=await reader.decodeFromVideoDevice(cameraSelect.value||undefined,video,(scan,error,activeControls)=>{controls=activeControls;if(scan){const value=scan.getText(),now=Date.now();if(value!==seenText||now-seenAt>1800){seenText=value;seenAt=now;lastText=value;result.textContent=value;format.textContent='Format: '+scan.getBarcodeFormat();copyButton.disabled=false;status.textContent='Barcode detected!';if(navigator.vibrate)navigator.vibrate(80)}}});stopButton.disabled=false;status.textContent='Camera running — line up a barcode to scan.';await loadCameras()}catch(e){console.error(e);status.textContent='Camera could not start. Allow camera access and open this page over HTTPS or localhost.';startButton.disabled=false;stopButton.disabled=true}}
+startButton.addEventListener('click',startScanner);stopButton.addEventListener('click',async()=>{await stopScanner();status.textContent='Scanner stopped.'});cameraSelect.addEventListener('change',()=>{if(controls)startScanner()});copyButton.addEventListener('click',async()=>{if(!lastText)return;try{await navigator.clipboard.writeText(lastText);status.textContent='Scan copied to clipboard.'}catch(e){status.textContent='Clipboard access failed. Select and copy the scan text manually.'}});window.addEventListener('pagehide',()=>{if(controls)controls.stop();video.srcObject?.getTracks().forEach(t=>t.stop())});loadCameras();
+</script>
+</body></html>

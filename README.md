@@ -16,3 +16,13 @@ Then use a path like this in the HTML:
 ```html
 <img src="gallery/photos/train-shot-1.jpg" alt="Train shot 1">
 ```
+
+## Mods setup
+
+Put downloadable mod files in `mods/downloads` and add a download card to `mods.html` for each file. Link to the file with a relative path and the `download` attribute, for example:
+
+```html
+<a href="mods/downloads/example-mod.zip" download>Download the mod</a>
+```
+
+All mods listed on the page depend on Immersive Railroading (IR) and require all needed IR files.

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download train simulator mods from Noah & Ed's Train Adventures.">
+    <title>Mods | Noah & Ed's Train Adventures</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tailwind.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js" defer></script>
+</head>
+<body class="antialiased flex flex-col min-h-screen bg-cn-black text-cn-text">
+    <nav class="sticky top-0 z-50 bg-cn-black/95 backdrop-blur-sm border-b border-cn-red px-6 py-4 shadow-lg shadow-black/50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html" class="font-oswald text-2xl font-bold text-white tracking-wider uppercase hover:text-cn-red transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cn-red"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                Noah &amp; Ed's
+            </a>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-6 font-oswald tracking-wide">
+                <a href="index.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Home</a>
+                <a href="about.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">About Us</a>
+                <a href="sprague-sub.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Sprague Sub Guide</a>
+                <a href="gear.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Scanner &amp; Gear</a>
+                <a href="contact.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Submit Idea</a>
+                <a href="merch.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">MERCH</a>
+                <a href="gallery.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Gallery</a>
+                <a href="mods.html" class="nav-btn active text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" aria-current="page">Mods</a>
+                <a href="video.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Videos</a>
+                <a id="live-nav-link" href="live.html" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="gallery-hero relative w-full overflow-hidden border-b-[6px] border-cn-red py-20 px-4 text-center">
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <p class="text-cn-red font-oswald tracking-[0.2em] uppercase text-sm mb-4">Downloads</p>
+            <h1 class="text-4xl md:text-6xl font-oswald font-bold text-white uppercase tracking-tight">Our Mods</h1>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto mt-5">Find and download our train simulator mods here.</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-grow">
+        <section class="mb-10 rounded-xl border border-cn-red/40 bg-cn-card p-6 md:p-8" aria-labelledby="ir-requirement">
+            <p class="text-cn-red font-oswald uppercase tracking-[0.18em] text-xs mb-2">Required dependency</p>
+            <h2 id="ir-requirement" class="text-2xl font-oswald font-bold text-white uppercase tracking-wide">Immersive Railroading (IR)</h2>
+            <p class="mt-3 max-w-3xl leading-relaxed text-gray-300">All mods posted here depend on Immersive Railroading. You need IR and all required IR files installed for these mods to work.</p>
+        </section>
+
+        <section aria-labelledby="available-mods">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-2 h-8 bg-cn-red rounded-full"></div>
+                <h2 id="available-mods" class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Available Downloads</h2>
+            </div>
+            <div class="rounded-xl border border-cn-border bg-cn-card p-8 text-center">
+                <p class="font-oswald text-xl uppercase text-white">No mods posted yet</p>
+                <p class="mt-2 text-cn-muted">Check back later for downloadable files.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-cn-border px-4 py-6 text-center text-sm text-cn-muted">
+        Noah &amp; Ed's Train Adventures
+    </footer>
+</body>
+</html>

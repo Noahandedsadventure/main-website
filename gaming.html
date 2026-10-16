@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:site_name" content="Noah & Ed's Train Adventures">
+    <title>Gaming Channel | Noah & Ed's Train Adventures</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tailwind.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js" defer></script>
+</head>
+<body class="page-shell min-h-screen">
+    <nav class="sticky top-0 z-50 bg-cn-black/95 backdrop-blur-sm border-b border-cn-red px-6 py-4 shadow-lg shadow-black/50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html" class="font-oswald text-2xl font-bold text-white tracking-wider uppercase hover:text-cn-red transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cn-red"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                Noah & Ed's
+            </a>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-6 font-oswald tracking-wide">
+                <a href="index.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Home</a>
+                <a href="about.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">About Us</a>
+                <a href="sprague-sub.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Sprague Sub Guide</a>
+                <a href="gear.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Scanner & Gear</a>
+                <a href="contact.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Submit Idea</a>
+                <a href="merch.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">MERCH</a>
+                <a href="gallery.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Gallery</a>
+                <a href="mods.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Mods</a>
+                <a href="video.html" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Videos</a>
+                <a href="gaming.html" class="nav-btn gaming-nav-link active text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium" aria-current="page">Gaming Channel</a>
+                <a id="live-nav-link" href="live.html" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative w-full border-b-[6px] border-cn-red py-20 px-4 text-center bg-gradient-to-b from-cn-black to-cn-base">
+        <p class="text-cn-red font-oswald tracking-[0.2em] uppercase text-sm mb-4">New Channel</p>
+        <h1 class="text-4xl md:text-6xl font-oswald font-bold text-white uppercase">Gaming Channel</h1>
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto mt-5">Catch our latest gaming videos and join us for more adventures.</p>
+        <a href="https://www.youtube.com/channel/UCMxGPWLjDHRQ9xoLHCXd45g" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-md bg-cn-red px-8 py-3 font-oswald font-bold uppercase tracking-widest text-white transition-colors hover:bg-cn-darkred focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+            Visit our Gaming Channel
+        </a>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-2 h-8 bg-cn-red"></div>
+            <div>
+                <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Latest Gaming Videos</h2>
+                <p id="gaming-video-status" class="text-cn-muted mt-1" aria-live="polite">Loading recent videos...</p>
+            </div>
+        </div>
+
+        <div id="gaming-video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" aria-live="polite"></div>
+    </main>
+
+    <footer class="bg-cn-black border-t border-[#222] py-8 text-center mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            <h4 class="font-oswald text-xl text-white uppercase tracking-wider mb-2">Noah & Ed's Train Adventures</h4>
+            <p class="text-cn-muted text-sm font-light uppercase tracking-widest">&copy; 2026 Documenting CN Power.</p>
+        </div>
+    </footer>
+
+    <script>
+        const GAMING_CHANNEL_ID = 'UCMxGPWLjDHRQ9xoLHCXd45g';
+        const gamingVideoGrid = document.getElementById('gaming-video-grid');
+        const gamingVideoStatus = document.getElementById('gaming-video-status');
+
+        function getGamingVideoId(link) {
+            try {
+                const url = new URL(link);
+                const hostname = url.hostname.toLowerCase();
+                if (hostname === 'youtu.be') {
+                    const id = url.pathname.split('/').filter(Boolean)[0];
+                    return /^[\w-]{11}$/.test(id || '') ? id : null;
+                }
+                if (hostname !== 'youtube.com' && !hostname.endsWith('.youtube.com')) return null;
+
+                const id = url.searchParams.get('v')
+                    || url.pathname.split('/').filter(Boolean).slice(-1)[0];
+                return /^[\w-]{11}$/.test(id || '') ? id : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function createGamingVideoCard(video, videoId) {
+            const card = document.createElement('article');
+            card.className = 'overflow-hidden rounded-xl border border-cn-border bg-cn-card transition-colors hover:border-cn-red';
+
+            const videoLink = document.createElement('a');
+            videoLink.href = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+            videoLink.target = '_blank';
+            videoLink.rel = 'noopener noreferrer';
+            videoLink.className = 'group block';
+            videoLink.setAttribute('aria-label', `Watch ${video.title} on YouTube`);
+
+            const thumbnail = document.createElement('img');
+            thumbnail.src = `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`;
+            thumbnail.alt = '';
+            thumbnail.loading = 'lazy';
+            thumbnail.className = 'aspect-video w-full object-cover transition-opacity group-hover:opacity-80';
+            videoLink.append(thumbnail);
+
+            const details = document.createElement('div');
+            details.className = 'p-5';
+
+            const title = document.createElement('h3');
+            title.className = 'line-clamp-2 font-oswald text-lg font-bold text-white';
+            title.textContent = video.title || 'Gaming video';
+            details.append(title);
+
+            const publishedAt = new Date(video.pubDate);
+            if (!Number.isNaN(publishedAt.getTime())) {
+                const date = document.createElement('p');
+                date.className = 'mt-2 text-sm text-cn-muted';
+                date.textContent = `Published ${new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(publishedAt)}`;
+                details.append(date);
+            }
+
+            const watchLink = document.createElement('span');
+            watchLink.className = 'mt-4 inline-block font-oswald text-sm font-bold uppercase tracking-widest text-cn-red group-hover:text-white';
+            watchLink.textContent = 'Watch on YouTube';
+            details.append(watchLink);
+
+            videoLink.append(details);
+            card.append(videoLink);
+            return card;
+        }
+
+        async function loadLatestGamingVideos() {
+            const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${GAMING_CHANNEL_ID}`);
+            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+            if (!response.ok) throw new Error(`Gaming video feed request failed: ${response.status}`);
+
+            const data = await response.json();
+            if (data.status !== 'ok' || !Array.isArray(data.items)) {
+                throw new Error('Gaming video feed returned no videos');
+            }
+
+            const recentVideos = data.items
+                .map(video => ({ video, videoId: getGamingVideoId(video.link) }))
+                .filter(({ video, videoId }) => videoId && !/\b(private video|deleted video|video unavailable)\b/i.test(video.title || ''))
+                .slice(0, 6);
+
+            if (!recentVideos.length) {
+                gamingVideoStatus.textContent = 'No recent videos are available yet. Check back soon!';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            recentVideos.forEach(({ video, videoId }) => {
+                fragment.append(createGamingVideoCard(video, videoId));
+            });
+            gamingVideoGrid.replaceChildren(fragment);
+            gamingVideoStatus.textContent = `${recentVideos.length} recent ${recentVideos.length === 1 ? 'video' : 'videos'}`;
+        }
+
+        loadLatestGamingVideos().catch(error => {
+            console.error('Could not load recent gaming videos:', error);
+            gamingVideoStatus.textContent = 'Recent videos could not be loaded right now. Visit the channel to watch on YouTube.';
+        });
+    </script>
+</body>
+</html>

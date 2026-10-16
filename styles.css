@@ -229,14 +229,40 @@ header[role="banner"] {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    min-height: 3rem;
 }
 
 .site-nav-links {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.5rem;
+    background: rgba(18, 18, 18, 0.8);
+}
+
+.site-nav-links .nav-btn {
+    padding: 0.45rem 0.6rem;
+    border-radius: 0.3rem;
+    white-space: nowrap;
+}
+
+.site-nav-links .nav-btn.active {
+    background: rgba(229, 57, 53, 0.15);
+}
+
+.site-nav-links .gaming-nav-link {
+    border: 1px solid rgba(229, 57, 53, 0.65);
+    color: #ffffff;
+}
+
+.site-nav-links .gaming-nav-link:hover,
+.site-nav-links .gaming-nav-link:focus-visible {
+    background: var(--cn-red);
+    color: #ffffff;
 }
 
 .site-nav-toggle {
@@ -278,7 +304,7 @@ header[role="banner"] {
         flex-direction: column;
         align-items: stretch;
         gap: 0.25rem;
-        padding-top: 0.75rem;
+        padding: 0.75rem;
         border-top: 1px solid var(--cn-border);
     }
 
@@ -289,6 +315,11 @@ header[role="banner"] {
     .site-nav-links .nav-btn {
         padding: 0.75rem 0.25rem;
         border-bottom: 1px solid var(--cn-border);
+    }
+
+    .site-nav-links .gaming-nav-link {
+        padding-left: 0.75rem;
+        border: 1px solid rgba(229, 57, 53, 0.65);
     }
 
     .site-nav-links .live-stream-link {
@@ -306,6 +337,10 @@ header[role="banner"] {
     height: 2px;
     background-color: var(--cn-red);
     transition: width 0.3s ease;
+}
+
+.gaming-nav-link::after {
+    display: none;
 }
 
 .nav-btn:hover::after,

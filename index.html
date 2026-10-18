@@ -97,7 +97,7 @@
                 <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Latest CN Catches</h2>
             </div>
             
-            <p class="text-cn-muted mb-8 text-lg">Automatically updated with our newest YouTube uploads and trackside livestreams.</p>
+            <p class="text-cn-muted mb-8 text-lg">The latest uploads and livestream replays from our main YouTube channel.</p>
 
             <section class="mb-10 rounded-xl border border-cn-border bg-cn-card p-6 md:flex md:items-center md:justify-between md:gap-6">
                 <div>
@@ -107,13 +107,17 @@
                 <a href="gaming.html" class="mt-4 inline-flex shrink-0 items-center rounded border border-cn-red px-5 py-3 font-oswald font-bold uppercase tracking-wide text-cn-red transition-colors hover:bg-cn-red hover:text-white md:mt-0">Explore Gaming Channel</a>
             </section>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" id="auto-video-grid">
-                <!-- Loading State -->
-                <div class="col-span-full flex justify-center py-12">
-                    <div class="animate-pulse flex flex-col items-center">
-                        <div class="w-12 h-12 border-4 border-cn-red border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p class="text-cn-muted font-oswald uppercase tracking-widest">Loading latest rail action...</p>
-                    </div>
+            <div class="mb-12 overflow-hidden rounded-xl border border-cn-border bg-cn-card">
+                <iframe
+                    class="aspect-video w-full border-0"
+                    src="https://www.youtube-nocookie.com/embed/videoseries?list=UUzDVvHcpWnu510JRLGnK-qg"
+                    title="Latest videos from Noah and Ed's Train Adventures"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+                <div class="border-t border-cn-border p-4 text-center">
+                    <a href="https://www.youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" rel="noopener noreferrer" class="font-oswald font-bold uppercase tracking-widest text-cn-red hover:text-white">View the main channel on YouTube</a>
                 </div>
             </div>
             
@@ -378,34 +382,6 @@
             evt.currentTarget.classList.add("text-white");
         }
 
-        function escapeHtml(value) {
-            return String(value).replace(/[&<>"']/g, character => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            }[character]));
-        }
-
-        function getYouTubeVideoId(link) {
-            try {
-                const url = new URL(link);
-                if (url.hostname === 'youtu.be') {
-                    return url.pathname.slice(1).split('/')[0];
-                }
-                return url.searchParams.get('v') || url.pathname.split('/').pop();
-            } catch (error) {
-                return null;
-            }
-        }
-
-        function isUnavailableYouTubeVideo(video) {
-            const videoText = `${video.title || ''} ${video.description || ''}`;
-            return /\b(private video|deleted video|removed video|video unavailable|video not available)\b/i.test(videoText)
-                || /\[deleted\]|\[private\]/i.test(videoText);
-        }
-
         async function checkLiveStatus() {
             const liveNavLink = document.getElementById('live-nav-link');
             const liveSection = document.getElementById('livestream-section');
@@ -460,66 +436,7 @@
             }
         }
 
-        // YouTube RSS Fetcher
-        async function fetchLatestVideos() {
-            const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
-            const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`;
-
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`YouTube feed request failed: ${response.status}`);
-                const data = await response.json();
-                
-                if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('YouTube feed returned no videos');
-
-                const videoGrid = document.getElementById('auto-video-grid');
-                videoGrid.innerHTML = ''; 
-                
-                const latestVideos = data.items
-                    .filter(video => !isUnavailableYouTubeVideo(video))
-                    .slice(0, 3);
-                
-                latestVideos.forEach(video => {
-                        const videoId = getYouTubeVideoId(video.link);
-                        if (!videoId) return;
-
-                        const safeTitle = escapeHtml(video.title);
-                        const isLive = /\b(live|livestream|live stream)\b/i.test(video.title);
-                        const watchLink = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
-                        const thumbnail = video.thumbnail;
-                        const media = isLive
-                            ? thumbnail
-                                ? `<a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 group/media">
-                                        <img src="${thumbnail}" alt="${safeTitle}" class="w-full h-full object-cover" loading="lazy">
-                                        <span class="absolute inset-0 flex items-center justify-center bg-black/45 text-white font-oswald uppercase tracking-widest group-hover/media:bg-black/25 transition-colors">Watch Live Replay</span>
-                                   </a>`
-                                : `<a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 flex items-center justify-center bg-cn-base text-cn-muted font-oswald uppercase tracking-widest">Watch Live Replay</a>`
-                            : `<iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}" title="${safeTitle}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-                        const videoCard = `
-                            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden group hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(229,57,53,0.15)] hover:border-cn-red/50 transition-all duration-300">
-                                <div class="relative pt-[56.25%] w-full bg-cn-base">
-                                    ${media}
-                                </div>
-                                <div class="p-5 border-t border-cn-border group-hover:border-cn-red/30 transition-colors">
-                                    <h3 class="font-bold text-white line-clamp-2 leading-snug group-hover:text-cn-red transition-colors">${safeTitle}</h3>
-                                    <a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs text-cn-red hover:text-white mt-3 font-oswald uppercase tracking-widest border-t border-[#333] pt-3 w-full">Watch on YouTube</a>
-                                </div>
-                            </div>
-                        `;
-                        videoGrid.innerHTML += videoCard;
-                });
-            } catch (error) {
-                document.getElementById('auto-video-grid').innerHTML = `
-                    <div class="col-span-full bg-cn-card border border-cn-border p-6 rounded-lg text-center">
-                        <p class="text-gray-300">Check out our latest catches on our <a href="https://youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" class="text-cn-red hover:underline font-bold">YouTube channel</a>!</p>
-                    </div>
-                `;
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            fetchLatestVideos();
             checkLiveStatus();
             setInterval(checkLiveStatus, 120000);
         });

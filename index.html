@@ -107,14 +107,19 @@
                 <a href="gaming.html" class="mt-4 inline-flex shrink-0 items-center rounded border border-cn-red px-5 py-3 font-oswald font-bold uppercase tracking-wide text-cn-red transition-colors hover:bg-cn-red hover:text-white md:mt-0">Explore Gaming Channel</a>
             </section>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" id="auto-video-grid">
-                <!-- Loading State -->
-                <div class="col-span-full flex justify-center py-12">
-                    <div class="animate-pulse flex flex-col items-center">
-                        <div class="w-12 h-12 border-4 border-cn-red border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p class="text-cn-muted font-oswald uppercase tracking-widest">Loading latest rail action...</p>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <section>
+                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Short <span class="text-sm text-cn-muted">(under 2 minutes)</span></h3>
+                    <div id="latest-short" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest Short...</div>
+                </section>
+                <section>
+                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Long-Form</h3>
+                    <div id="latest-long-video" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest long-form video...</div>
+                </section>
+                <section>
+                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Livestream</h3>
+                    <div id="latest-livestream" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest livestream...</div>
+                </section>
             </div>
             <p class="mb-12 text-center">
                 <a href="https://www.youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" rel="noopener noreferrer" class="font-oswald font-bold uppercase tracking-widest text-cn-red hover:text-white">View the main channel on YouTube</a>

@@ -109,7 +109,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <section>
-                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Short <span class="text-sm text-cn-muted">(90 seconds max)</span></h3>
+                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Short <span class="text-sm text-cn-muted">(under 2 minutes)</span></h3>
                     <div id="latest-short" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest Short...</div>
                 </section>
                 <section>
@@ -365,7 +365,7 @@
     <script>
         const API_KEY = 'AIzaSyDzXrJHFeiuBP5w6H7pT6KGrFY7q_UGn4A';
         const CHANNEL_ID = 'UCzDVvHcpWnu510JRLGnK-qg';
-        const SHORTS_MAX_SECONDS = 90;
+        const SHORTS_MAX_SECONDS = 120;
 
         function openTab(evt, tabId) {
             const tabContents = document.getElementsByClassName("tab-content");
@@ -482,13 +482,13 @@
                     const duration = parseYouTubeDuration(video.contentDetails.duration);
                     return duration !== null
                         && duration > 0
-                        && duration <= SHORTS_MAX_SECONDS
+                        && duration < SHORTS_MAX_SECONDS
                         && !video.liveStreamingDetails;
                 });
                 const liveVideo = videos.find(video => Boolean(video.liveStreamingDetails));
                 const longVideo = videos.find(video => {
                     const duration = parseYouTubeDuration(video.contentDetails.duration);
-                    return duration !== null && duration > SHORTS_MAX_SECONDS && !video.liveStreamingDetails;
+                    return duration !== null && duration >= SHORTS_MAX_SECONDS && !video.liveStreamingDetails;
                 });
 
                 renderVideoCard(document.getElementById('latest-short'), shortVideo, 'Short');

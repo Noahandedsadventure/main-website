@@ -2,12 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://noahandedsadventure.github.io/main-website/</loc>
-    <lastmod>2026-09-22</lastmod>
-    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/about.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/contact.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/gallery.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/gaming.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/gear.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/live.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/merch.html</loc>
   </url>
   <url>
     <loc>https://noahandedsadventure.github.io/main-website/mods.html</loc>
-    <lastmod>2026-10-12</lastmod>
-    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/sprague-sub.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/video.html</loc>
+  </url>
+  <url>
+    <loc>https://noahandedsadventure.github.io/main-website/barcode/</loc>
   </url>
 </urlset>

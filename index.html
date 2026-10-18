@@ -97,7 +97,7 @@
                 <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Latest CN Catches</h2>
             </div>
             
-            <p class="text-cn-muted mb-8 text-lg">Automatically updated with our newest YouTube uploads and trackside livestreams.</p>
+            <p class="text-cn-muted mb-8 text-lg">One Short, one long-form upload, and one livestream from our main YouTube channel.</p>
 
             <section class="mb-10 rounded-xl border border-cn-border bg-cn-card p-6 md:flex md:items-center md:justify-between md:gap-6">
                 <div>
@@ -106,7 +106,7 @@
                 </div>
                 <a href="gaming.html" class="mt-4 inline-flex shrink-0 items-center rounded border border-cn-red px-5 py-3 font-oswald font-bold uppercase tracking-wide text-cn-red transition-colors hover:bg-cn-red hover:text-white md:mt-0">Explore Gaming Channel</a>
             </section>
-
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" id="auto-video-grid">
                 <!-- Loading State -->
                 <div class="col-span-full flex justify-center py-12">
@@ -116,6 +116,9 @@
                     </div>
                 </div>
             </div>
+            <p class="mb-12 text-center">
+                <a href="https://www.youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" rel="noopener noreferrer" class="font-oswald font-bold uppercase tracking-widest text-cn-red hover:text-white">View the main channel on YouTube</a>
+            </p>
             
             <section class="mb-12">
                 <div class="flex items-center gap-3 mb-8">
@@ -360,6 +363,7 @@
     <script>
         const API_KEY = 'AIzaSyDzXrJHFeiuBP5w6H7pT6KGrFY7q_UGn4A';
         const CHANNEL_ID = 'UCzDVvHcpWnu510JRLGnK-qg';
+        const SHORTS_MAX_SECONDS = 120;
 
         function openTab(evt, tabId) {
             const tabContents = document.getElementsByClassName("tab-content");
@@ -381,32 +385,123 @@
             evt.currentTarget.classList.add("text-white");
         }
 
-        function escapeHtml(value) {
-            return String(value).replace(/[&<>"']/g, character => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            }[character]));
+        function parseYouTubeDuration(duration) {
+            const match = duration.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            if (!match) return null;
+
+            const [, hours = '0', minutes = '0', seconds = '0'] = match;
+            return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
         }
 
-        function getYouTubeVideoId(link) {
-            try {
-                const url = new URL(link);
-                if (url.hostname === 'youtu.be') {
-                    return url.pathname.slice(1).split('/')[0];
-                }
-                return url.searchParams.get('v') || url.pathname.split('/').pop();
-            } catch (error) {
-                return null;
+        async function fetchYouTubeApi(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`YouTube API request failed: ${response.status}`);
             }
+
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(`YouTube API error: ${data.error.message}`);
+            }
+            return data;
         }
 
-        function isUnavailableYouTubeVideo(video) {
-            const videoText = `${video.title || ''} ${video.description || ''}`;
-            return /\b(private video|deleted video|removed video|video unavailable|video not available)\b/i.test(videoText)
-                || /\[deleted\]|\[private\]/i.test(videoText);
+        function renderVideoCard(container, video, label) {
+            container.replaceChildren();
+
+            if (!video) {
+                const message = document.createElement('p');
+                message.className = 'text-gray-400';
+                message.textContent = `No ${label.toLowerCase()} is available right now.`;
+                container.appendChild(message);
+                return;
+            }
+
+            const media = document.createElement('div');
+            media.className = 'relative pt-[56.25%] w-full overflow-hidden rounded-lg bg-cn-base';
+
+            const player = document.createElement('iframe');
+            player.className = 'absolute top-0 left-0 w-full h-full border-0';
+            player.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.id)}`;
+            player.title = video.snippet.title;
+            player.loading = 'lazy';
+            player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            player.allowFullscreen = true;
+            media.appendChild(player);
+
+            const title = document.createElement('h4');
+            title.className = 'mt-4 font-bold leading-snug text-white';
+            title.textContent = video.snippet.title;
+
+            const link = document.createElement('a');
+            link.className = 'mt-3 inline-block text-xs font-oswald uppercase tracking-widest text-cn-red hover:text-white';
+            link.href = `https://www.youtube.com/watch?v=${encodeURIComponent(video.id)}`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = 'Watch on YouTube';
+
+            container.className = 'bg-cn-card border border-cn-border rounded-xl p-4';
+            container.append(media, title, link);
+        }
+
+        async function fetchLatestVideos() {
+            const uploadPlaylistId = CHANNEL_ID.replace(/^UC/, 'UU');
+            const playlistUrl = new URL('https://www.googleapis.com/youtube/v3/playlistItems');
+            playlistUrl.search = new URLSearchParams({
+                part: 'snippet',
+                playlistId: uploadPlaylistId,
+                maxResults: '50',
+                key: API_KEY
+            });
+
+            try {
+                const playlist = await fetchYouTubeApi(playlistUrl);
+                const videoIds = (playlist.items || [])
+                    .map(item => item.snippet?.resourceId?.videoId)
+                    .filter(Boolean);
+
+                if (!videoIds.length) {
+                    throw new Error('The channel uploads playlist returned no videos.');
+                }
+
+                const videosUrl = new URL('https://www.googleapis.com/youtube/v3/videos');
+                videosUrl.search = new URLSearchParams({
+                    part: 'snippet,contentDetails,liveStreamingDetails',
+                    id: videoIds.join(','),
+                    key: API_KEY
+                });
+                const videoData = await fetchYouTubeApi(videosUrl);
+                const videosById = new Map((videoData.items || []).map(video => [video.id, video]));
+                const videos = videoIds
+                    .map(videoId => videosById.get(videoId))
+                    .filter(video => video && video.contentDetails?.duration);
+
+                const shortVideo = videos.find(video => {
+                    const duration = parseYouTubeDuration(video.contentDetails.duration);
+                    return duration !== null
+                        && duration > 0
+                        && duration < SHORTS_MAX_SECONDS
+                        && !video.liveStreamingDetails;
+                });
+                const liveVideo = videos.find(video => Boolean(video.liveStreamingDetails));
+                const longVideo = videos.find(video => {
+                    const duration = parseYouTubeDuration(video.contentDetails.duration);
+                    return duration !== null && duration >= SHORTS_MAX_SECONDS && !video.liveStreamingDetails;
+                });
+
+                renderVideoCard(document.getElementById('latest-short'), shortVideo, 'Short');
+                renderVideoCard(document.getElementById('latest-long-video'), longVideo, 'long-form video');
+                renderVideoCard(document.getElementById('latest-livestream'), liveVideo, 'livestream');
+            } catch (error) {
+                console.error('Failed to load the main channel videos:', error);
+                for (const [id, label] of [
+                    ['latest-short', 'Short'],
+                    ['latest-long-video', 'long-form video'],
+                    ['latest-livestream', 'livestream']
+                ]) {
+                    renderVideoCard(document.getElementById(id), null, label);
+                }
+            }
         }
 
         async function checkLiveStatus() {
@@ -460,64 +555,6 @@
                 livePlayer.src = '';
                 liveChat.src = '';
                 streamTitle.textContent = 'Live stream unavailable';
-            }
-        }
-
-        // YouTube RSS Fetcher
-        async function fetchLatestVideos() {
-            const channelId = 'UCzDVvHcpWnu510JRLGnK-qg'; 
-            const rssUrl = encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`;
-
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`YouTube feed request failed: ${response.status}`);
-                const data = await response.json();
-                
-                if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('YouTube feed returned no videos');
-
-                const videoGrid = document.getElementById('auto-video-grid');
-                videoGrid.innerHTML = ''; 
-                
-                const latestVideos = data.items
-                    .filter(video => !isUnavailableYouTubeVideo(video))
-                    .slice(0, 3);
-                
-                latestVideos.forEach(video => {
-                        const videoId = getYouTubeVideoId(video.link);
-                        if (!videoId) return;
-
-                        const safeTitle = escapeHtml(video.title);
-                        const isLive = /\b(live|livestream|live stream)\b/i.test(video.title);
-                        const watchLink = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
-                        const thumbnail = video.thumbnail;
-                        const media = isLive
-                            ? thumbnail
-                                ? `<a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 group/media">
-                                        <img src="${thumbnail}" alt="${safeTitle}" class="w-full h-full object-cover" loading="lazy">
-                                        <span class="absolute inset-0 flex items-center justify-center bg-black/45 text-white font-oswald uppercase tracking-widest group-hover/media:bg-black/25 transition-colors">Watch Live Replay</span>
-                                   </a>`
-                                : `<a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 flex items-center justify-center bg-cn-base text-cn-muted font-oswald uppercase tracking-widest">Watch Live Replay</a>`
-                            : `<iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}" title="${safeTitle}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-                        const videoCard = `
-                            <div class="bg-cn-card border border-cn-border rounded-xl overflow-hidden group hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(229,57,53,0.15)] hover:border-cn-red/50 transition-all duration-300">
-                                <div class="relative pt-[56.25%] w-full bg-cn-base">
-                                    ${media}
-                                </div>
-                                <div class="p-5 border-t border-cn-border group-hover:border-cn-red/30 transition-colors">
-                                    <h3 class="font-bold text-white line-clamp-2 leading-snug group-hover:text-cn-red transition-colors">${safeTitle}</h3>
-                                    <a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs text-cn-red hover:text-white mt-3 font-oswald uppercase tracking-widest border-t border-[#333] pt-3 w-full">Watch on YouTube</a>
-                                </div>
-                            </div>
-                        `;
-                        videoGrid.innerHTML += videoCard;
-                });
-            } catch (error) {
-                document.getElementById('auto-video-grid').innerHTML = `
-                    <div class="col-span-full bg-cn-card border border-cn-border p-6 rounded-lg text-center">
-                        <p class="text-gray-300">Check out our latest catches on our <a href="https://youtube.com/channel/UCzDVvHcpWnu510JRLGnK-qg" target="_blank" class="text-cn-red hover:underline font-bold">YouTube channel</a>!</p>
-                    </div>
-                `;
             }
         }
 

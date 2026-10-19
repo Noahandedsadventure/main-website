@@ -142,14 +142,17 @@
 
     <script>
         const API_KEY = 'AIzaSyDzXrJHFeiuBP5w6H7pT6KGrFY7q_UGn4A';
-        const CHANNEL_ID = 'UCzDVvHcpWnu510JRLGnK-qg';
+        const LIVE_CHANNELS = [
+            { id: 'UCMxGPWLjDHRQ9xoLHCXd45g', name: 'Gaming Channel' },
+            { id: 'UCzDVvHcpWnu510JRLGnK-qg', name: 'Main Channel' }
+        ];
 
         const liveLayout = document.getElementById('live-layout');
         const offlineBox = document.getElementById('offline-box');
         const streamTitle = document.getElementById('stream-title');
         const livePlayer = document.getElementById('live-player');
         const liveChat = document.getElementById('live-chat');
-        const liveBadge = document.querySelector('.live-badge');
+        const liveBadge = document.getElementById('live-nav-link');
 
         async function checkLiveStatus() {
             if (!API_KEY || API_KEY === 'YOUR_YOUTUBE_DATA_API_KEY') {
@@ -162,32 +165,46 @@
                 return;
             }
 
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
-
+            let liveBroadcast = null;
+            let requestFailed = false;
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`YouTube API request failed: ${response.status}`);
+                for (const channel of LIVE_CHANNELS) {
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.id}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
+
+                    try {
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`YouTube API request failed: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        const video = data.items && data.items[0];
+                        if (video) {
+                            liveBroadcast = { video, channelName: channel.name };
+                            break;
+                        }
+                    } catch (error) {
+                        requestFailed = true;
+                        console.error(`Could not check ${channel.name} live status:`, error);
+                    }
                 }
 
-                const data = await response.json();
-                const video = data.items && data.items[0];
-
-                if (!video) {
+                if (!liveBroadcast) {
                     liveLayout.style.display = 'none';
                     offlineBox.style.display = 'block';
-                    streamTitle.textContent = 'No live stream right now';
+                    streamTitle.textContent = requestFailed ? 'Live stream unavailable' : 'No live stream right now';
                     liveBadge.classList.remove('is-live');
                     livePlayer.src = '';
                     liveChat.src = '';
                     return;
                 }
 
+                const { video, channelName } = liveBroadcast;
                 const videoId = video.id.videoId;
                 const title = video.snippet.title;
                 const embedDomain = window.location.hostname;
 
-                streamTitle.textContent = title;
+                streamTitle.textContent = `${channelName}: ${title}`;
                 livePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
                 liveChat.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedDomain}`;
 

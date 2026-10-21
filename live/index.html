@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../anniversary.js"></script>
     <title>LIVE STREAM | Noah and Ed's Train Adventures</title>
+    <link rel="canonical" href="https://noahandedsadventure.github.io/main-website/live/">
+    <meta name="description" content="Check the live stream status and watch Noah & Ed's Train Adventures on YouTube when a Canadian National railfan stream is live.">
+    <link rel="icon" type="image/jpeg" href="../logo.jpg">
+    <meta property="og:image" content="https://noahandedsadventure.github.io/main-website/logo.jpg">
+    <meta property="og:image:alt" content="Noah & Ed's Train Adventures train logo">
+    <meta name="twitter:card" content="summary">
     <meta name="google-site-verification" content="FjQOzcRmro76Ji04ro-pThfcSoNlmrvUc8nnYBvq9LY" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,13 +93,13 @@
                 <a href="../mods/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Mods</a>
                 <a href="../video/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Videos</a>
                 <a href="../gaming/" class="nav-btn gaming-nav-link text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Gaming Channel</a>
-                <a id="live-nav-link" href="../live/" class="live-stream-link is-live uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
+                <a id="live-nav-link" href="../live/" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
             </div>
         </div>
     </nav>
 
     <main class="page">
-        <div class="status-wrap">
+        <div id="status-wrap" class="status-wrap">
             <span class="status-dot" aria-hidden="true"></span>
             <h1 id="stream-title" class="status-text">Checking for live stream...</h1>
         </div>
@@ -119,82 +126,121 @@
         </div>
 
         <div id="offline-box" class="offline-box" style="display: none;">
-            <h3>No live stream right now</h3>
-            <p>Our channel is currently not broadcasting. Check back soon for live CN train action and trackside updates.</p>
+            <h3 id="offline-title">No live stream right now</h3>
+            <p id="offline-message">Neither channel is currently broadcasting. Check back soon for live train streams and updates.</p>
         </div>
 
         <div class="banner-box">
-            <strong>Not live right now</strong>
-            <a class="button primary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Watch Channel</a>
+            <strong id="live-status-banner" aria-live="polite">Checking live status...</strong>
+            <a id="live-watch-link" class="button primary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Visit YouTube</a>
         </div>
 
         <div class="secondary-links">
-            <a class="button primary" href="../">Back to Home</a>
-            <a class="button secondary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Visit YouTube</a>
+            <a class="button primary" href="./">Back to Home</a>
+            <a id="live-channel-link" class="button secondary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Main YouTube Channel</a>
         </div>
     </main>
 
     <script>
         const API_KEY = 'AIzaSyDzXrJHFeiuBP5w6H7pT6KGrFY7q_UGn4A';
-        const CHANNEL_ID = 'UCzDVvHcpWnu510JRLGnK-qg';
+        const LIVE_CHANNELS = [
+            { id: 'UCMxGPWLjDHRQ9xoLHCXd45g', name: 'Gaming Channel' },
+            { id: 'UCzDVvHcpWnu510JRLGnK-qg', name: 'Main Channel' }
+        ];
 
         const liveLayout = document.getElementById('live-layout');
         const offlineBox = document.getElementById('offline-box');
+        const offlineTitle = document.getElementById('offline-title');
+        const offlineMessage = document.getElementById('offline-message');
+        const statusWrap = document.getElementById('status-wrap');
         const streamTitle = document.getElementById('stream-title');
+        const liveStatusBanner = document.getElementById('live-status-banner');
+        const liveWatchLink = document.getElementById('live-watch-link');
+        const liveChannelLink = document.getElementById('live-channel-link');
         const livePlayer = document.getElementById('live-player');
         const liveChat = document.getElementById('live-chat');
-        const liveBadge = document.querySelector('.live-badge');
+        const liveBadge = document.getElementById('live-nav-link');
+
+        function showOfflineState(title, message) {
+            liveLayout.style.display = 'none';
+            offlineBox.style.display = 'block';
+            streamTitle.textContent = title;
+            offlineTitle.textContent = title;
+            offlineMessage.textContent = message;
+            liveStatusBanner.textContent = title === 'No live stream right now' ? 'Not live right now' : 'Live status unavailable';
+            liveWatchLink.href = 'https://www.youtube.com/@NoahandEdsTrainadventures';
+            liveWatchLink.textContent = 'Visit YouTube';
+            liveChannelLink.href = 'https://www.youtube.com/@NoahandEdsTrainadventures';
+            liveChannelLink.textContent = 'Main YouTube Channel';
+            statusWrap.classList.remove('is-live');
+            liveBadge.classList.remove('is-live');
+            livePlayer.src = '';
+            liveChat.src = '';
+        }
 
         async function checkLiveStatus() {
             if (!API_KEY || API_KEY === 'YOUR_YOUTUBE_DATA_API_KEY') {
-                liveLayout.style.display = 'none';
-                offlineBox.style.display = 'block';
-                streamTitle.textContent = 'Live stream unavailable';
-                liveBadge.classList.remove('is-live');
-                livePlayer.src = '';
-                liveChat.src = '';
+                showOfflineState('Live stream unavailable', 'Live status is not configured yet. Visit YouTube to check for a broadcast.');
                 return;
             }
 
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
-
+            let liveBroadcast = null;
+            let requestFailed = false;
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`YouTube API request failed: ${response.status}`);
+                for (const channel of LIVE_CHANNELS) {
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.id}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
+
+                    try {
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`YouTube API request failed: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        const video = data.items && data.items[0];
+                        if (video) {
+                            liveBroadcast = { video, channelName: channel.name };
+                            break;
+                        }
+                    } catch (error) {
+                        requestFailed = true;
+                        console.error(`Could not check ${channel.name} live status:`, error);
+                    }
                 }
 
-                const data = await response.json();
-                const video = data.items && data.items[0];
-
-                if (!video) {
-                    liveLayout.style.display = 'none';
-                    offlineBox.style.display = 'block';
-                    streamTitle.textContent = 'No live stream right now';
-                    liveBadge.classList.remove('is-live');
-                    livePlayer.src = '';
-                    liveChat.src = '';
+                if (!liveBroadcast) {
+                    showOfflineState(
+                        requestFailed ? 'Live stream unavailable' : 'No live stream right now',
+                        requestFailed
+                            ? 'We could not check YouTube live status. Visit a channel to check for a broadcast.'
+                            : 'Neither channel is currently broadcasting. Check back soon for live train streams and updates.'
+                    );
                     return;
                 }
 
+                const { video, channelName } = liveBroadcast;
                 const videoId = video.id.videoId;
                 const title = video.snippet.title;
                 const embedDomain = window.location.hostname;
+                const channelUrl = `https://www.youtube.com/channel/${liveBroadcast.video.snippet.channelId}`;
 
-                streamTitle.textContent = title;
+                streamTitle.textContent = `${channelName}: ${title}`;
+                liveStatusBanner.textContent = `LIVE NOW ON ${channelName}`;
+                offlineTitle.textContent = `${channelName} is live`;
+                liveWatchLink.href = `https://www.youtube.com/watch?v=${videoId}`;
+                liveWatchLink.textContent = 'Watch Live Stream';
+                liveChannelLink.href = channelUrl;
+                liveChannelLink.textContent = `${channelName} on YouTube`;
                 livePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
                 liveChat.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedDomain}`;
 
                 liveLayout.style.display = 'grid';
                 offlineBox.style.display = 'none';
+                statusWrap.classList.add('is-live');
                 liveBadge.classList.add('is-live');
             } catch (error) {
-                liveLayout.style.display = 'none';
-                offlineBox.style.display = 'block';
-                streamTitle.textContent = 'Live stream unavailable';
-                liveBadge.classList.remove('is-live');
-                livePlayer.src = '';
-                liveChat.src = '';
+                console.error('Could not check live status:', error);
+                showOfflineState('Live stream unavailable', 'We could not check YouTube live status. Visit a channel to check for a broadcast.');
             }
         }
 

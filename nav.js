@@ -5,6 +5,16 @@ document.querySelectorAll("nav").forEach((nav) => {
 
     if (!navInner || !brand || !menu) return;
 
+    const brandIcon = brand.querySelector("svg");
+    if (brandIcon) {
+        const logo = document.createElement("img");
+        logo.src = new URL("logo.jpg", document.currentScript.src).href;
+        logo.alt = "";
+        logo.setAttribute("aria-hidden", "true");
+        logo.className = "h-8 w-8 rounded-full bg-white object-contain p-0.5";
+        brandIcon.replaceWith(logo);
+    }
+
     navInner.classList.add("site-nav-inner");
     menu.classList.add("site-nav-links");
     menu.id = "site-nav-links";

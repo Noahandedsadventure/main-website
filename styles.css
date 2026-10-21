@@ -366,12 +366,26 @@ header[role="banner"] {
     transition: all 0.25s ease;
 }
 
+.live-stream-link::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: 0 0 0.55rem;
+    border-radius: 50%;
+    background: var(--cn-muted);
+}
+
 .live-stream-link.is-live {
     background: rgba(229, 57, 53, 0.18);
     color: #ffffff;
     font-weight: 800;
     box-shadow: 0 0 18px rgba(229, 57, 53, 0.55);
     animation: livePulse 1.8s infinite ease-in-out;
+}
+
+.live-stream-link.is-live::before {
+    background: var(--cn-red);
+    box-shadow: 0 0 10px rgba(229, 57, 53, 0.8);
 }
 
 @keyframes livePulse {
@@ -549,8 +563,13 @@ header[role="banner"] {
 .status-dot {
     width: 14px;
     height: 14px;
-    background: var(--cn-red);
+    flex: 0 0 14px;
+    background: var(--cn-muted);
     border-radius: 50%;
+}
+
+.status-wrap.is-live .status-dot {
+    background: var(--cn-red);
     box-shadow: 0 0 18px rgba(229, 57, 53, 0.8);
     animation: pulse 1.5s infinite ease-in-out;
 }

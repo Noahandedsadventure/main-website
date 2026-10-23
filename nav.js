@@ -158,4 +158,4 @@ function setIframeSource(iframe, source) {
 }
 
 updateLiveStatus();
-window.setInterval(updateLiveStatus, 120000);
+window.setInterval(updateLiveStatus, 60000);

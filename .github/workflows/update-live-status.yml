@@ -1,6 +1,10 @@
 name: Update live stream status
 
 on:
+  push:
+    paths:
+      - ".github/workflows/update-live-status.yml"
+      - "scripts/update_live_status.py"
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:

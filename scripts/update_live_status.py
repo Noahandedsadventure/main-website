@@ -48,7 +48,11 @@ def find_live_stream() -> dict[str, str] | None:
         watch_page = fetch(f"https://www.youtube.com/watch?v={video_id}")
         live_marker = re.search(r'"isLiveNow"\s*:\s*(true|false)', watch_page)
         if live_marker is None:
-            raise ValueError(f"Could not determine live state for {channel_name}")
+            print(
+                f"No live-state marker found for the latest {channel_name} "
+                "video; treating the channel as offline."
+            )
+            continue
         if live_marker.group(1) == "true":
             return {
                 "videoId": video_id,

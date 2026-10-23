@@ -1,4 +1,27 @@
 const liveStatusUrl = new URL("live-status.json", document.currentScript.src);
+const siteRoot = new URL(".", document.currentScript.src);
+const isHalloween = (() => {
+    const now = new Date();
+    return now >= new Date(2026, 9, 23) && now < new Date(2026, 10, 2);
+})();
+
+document.body.classList.toggle("halloween-theme", isHalloween);
+
+const brandLogoUrl = new URL(
+    isHalloween ? "gallery/photos/image.jpg" : "logo.jpg",
+    siteRoot,
+);
+document.querySelectorAll('link[rel~="icon"]').forEach((icon) => {
+    icon.href = brandLogoUrl.href;
+});
+const socialImage = document.querySelector('meta[property="og:image"]');
+if (socialImage) {
+    socialImage.content = brandLogoUrl.href;
+}
+const socialImageAlt = document.querySelector('meta[property="og:image:alt"]');
+if (socialImageAlt && isHalloween) {
+    socialImageAlt.content = "Halloween themed Noah & Ed's Train Adventures logo";
+}
 
 document.querySelectorAll("nav").forEach((nav) => {
     const navInner = nav.querySelector(":scope > div");
@@ -10,10 +33,10 @@ document.querySelectorAll("nav").forEach((nav) => {
     const brandIcon = brand.querySelector("svg");
     if (brandIcon) {
         const logo = document.createElement("img");
-        logo.src = new URL("logo.jpg", document.currentScript.src).href;
+        logo.src = brandLogoUrl.href;
         logo.alt = "";
         logo.setAttribute("aria-hidden", "true");
-        logo.className = "h-8 w-8 rounded-full bg-white object-contain p-0.5";
+        logo.className = "site-brand-logo h-8 w-8 rounded-full object-contain p-0.5";
         brandIcon.replaceWith(logo);
     }
 

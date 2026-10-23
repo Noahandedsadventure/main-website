@@ -516,64 +516,8 @@
             }
         }
 
-        async function checkLiveStatus() {
-            const liveNavLink = document.getElementById('live-nav-link');
-            const liveSection = document.getElementById('livestream-section');
-            const livePlayer = document.getElementById('live-player');
-            const liveChat = document.getElementById('live-chat');
-            const streamTitle = document.getElementById('stream-title');
-
-            liveNavLink.classList.remove('is-live');
-
-            if (!API_KEY || API_KEY === 'YOUR_YOUTUBE_DATA_API_KEY') {
-                liveSection.classList.remove('is-visible');
-                livePlayer.src = '';
-                liveChat.src = '';
-                streamTitle.textContent = 'Live stream unavailable';
-                return;
-            }
-
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video&order=date&maxResults=1&key=${API_KEY}`;
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`YouTube API request failed: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const video = data.items && data.items[0];
-
-                if (!video) {
-                    liveSection.classList.remove('is-visible');
-                    livePlayer.src = '';
-                    liveChat.src = '';
-                    streamTitle.textContent = 'No live stream right now';
-                    return;
-                }
-
-                const videoId = video.id.videoId;
-                const title = video.snippet.title;
-                const embedDomain = window.location.hostname;
-
-                streamTitle.textContent = title;
-                livePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                liveChat.src = `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${embedDomain}`;
-
-                liveSection.classList.add('is-visible');
-                liveNavLink.classList.add('is-live');
-            } catch (error) {
-                liveSection.classList.remove('is-visible');
-                livePlayer.src = '';
-                liveChat.src = '';
-                streamTitle.textContent = 'Live stream unavailable';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             fetchLatestVideos();
-            checkLiveStatus();
-            setInterval(checkLiveStatus, 120000);
         });
     </script>
 

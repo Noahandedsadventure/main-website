@@ -92,12 +92,12 @@ async function updateLiveStatus() {
             const streamTitle = document.getElementById("stream-title");
             streamTitle.textContent = title;
             liveSection.classList.toggle("is-visible", isLive);
-            livePlayer.src = isLive
+            setIframeSource(livePlayer, isLive
                 ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1`
-                : "";
-            liveChat.src = isLive
+                : "");
+            setIframeSource(liveChat, isLive
                 ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
-                : "";
+                : "");
         }
 
         if (liveLayout && offlineBox) {
@@ -126,12 +126,12 @@ async function updateLiveStatus() {
             liveLayout.style.display = isLive ? "grid" : "none";
             offlineBox.style.display = isLive ? "none" : "block";
             document.getElementById("status-wrap").classList.toggle("is-live", isLive);
-            livePlayer.src = isLive
+            setIframeSource(livePlayer, isLive
                 ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1`
-                : "";
-            liveChat.src = isLive
+                : "");
+            setIframeSource(liveChat, isLive
                 ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
-                : "";
+                : "");
         }
     } catch (error) {
         console.error("Could not load cached live status:", error);
@@ -148,6 +148,12 @@ async function updateLiveStatus() {
         if (liveStatusBanner) {
             liveStatusBanner.textContent = "Live status unavailable";
         }
+    }
+}
+
+function setIframeSource(iframe, source) {
+    if (iframe && iframe.getAttribute("src") !== source) {
+        iframe.src = source;
     }
 }
 

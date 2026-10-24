@@ -1,7 +1,6 @@
 import json
-import re
 import urllib.request
-import xml.etree.ElementTree as ET
+from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -10,8 +9,6 @@ CHANNELS = (
     ("UCMxGPWLjDHRQ9xoLHCXd45g", "Gaming Channel"),
     ("UCzDVvHcpWnu510JRLGnK-qg", "Main Channel"),
 )
-ATOM = "{http://www.w3.org/2005/Atom}"
-YOUTUBE = "{http://www.youtube.com/xml/schemas/2015}"
 STATUS_FILE = Path(__file__).resolve().parents[1] / "live-status.json"
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -31,37 +28,113 @@ def fetch(url: str) -> str:
 
 def find_live_stream() -> dict[str, str] | None:
     for channel_id, channel_name in CHANNELS:
-        feed_url = (
-            "https://www.youtube.com/feeds/videos.xml"
-            f"?channel_id={channel_id}"
-        )
-        feed = ET.fromstring(fetch(feed_url))
-        entry = feed.find(f"{ATOM}entry")
-        if entry is None:
-            continue
+        page = fetch(f"https://www.youtube.com/channel/{channel_id}/live")
+        data_start = page.find("var ytInitialData = ")
+        if data_start == -1:
+            raise ValueError(f"Could not read live page for {channel_name}")
+        data_start += len("var ytInitialData = ")
+        data_end = page.find(";</script>", data_start)
+        if data_end == -1:
+            raise ValueError(f"Could not read live page for {channel_name}")
 
-        video_id = entry.findtext(f"{YOUTUBE}videoId")
-        title = entry.findtext(f"{ATOM}title")
-        if not video_id or not title:
-            raise ValueError(f"Latest video data is missing for {channel_name}")
+        data = json.loads(page[data_start:data_end])
+        live_tab = find_live_tab(data)
+        if live_tab is None:
+            raise ValueError(f"Could not find the live tab for {channel_name}")
 
-        watch_page = fetch(f"https://www.youtube.com/watch?v={video_id}")
-        live_marker = re.search(r'"isLiveNow"\s*:\s*(true|false)', watch_page)
-        if live_marker is None:
-            print(
-                f"No live-state marker found for the latest {channel_name} "
-                "video; treating the channel as offline."
+        for video in find_lockup_videos(live_tab.get("contents", [])):
+            video_id = video.get("contentId")
+            metadata = video.get("metadata")
+            lockup_metadata = (
+                metadata.get("lockupMetadataViewModel")
+                if isinstance(metadata, dict)
+                else None
             )
-            continue
-        if live_marker.group(1) == "true":
-            return {
-                "videoId": video_id,
-                "title": title,
-                "channelId": channel_id,
-                "channelName": channel_name,
-            }
+            video_title = (
+                lockup_metadata.get("title")
+                if isinstance(lockup_metadata, dict)
+                else None
+            )
+            title = (
+                video_title.get("content")
+                if isinstance(video_title, dict)
+                else None
+            )
+            if not isinstance(video_id, str) or not isinstance(title, str):
+                raise ValueError(f"Live video data is missing for {channel_name}")
+
+            if has_live_badge(video):
+                return {
+                    "videoId": video_id,
+                    "title": title,
+                    "channelId": channel_id,
+                    "channelName": channel_name,
+                }
 
     return None
+
+
+def find_live_tab(value: object) -> dict[str, object] | None:
+    if isinstance(value, dict):
+        tab = value.get("tabRenderer")
+        if (
+            isinstance(tab, dict)
+            and tab.get("title") == "Live"
+            and tab.get("selected") is True
+        ):
+            content = tab.get("content")
+            if isinstance(content, dict):
+                rich_grid = content.get("richGridRenderer")
+                if isinstance(rich_grid, dict):
+                    return rich_grid
+                return None
+        for child in value.values():
+            result = find_live_tab(child)
+            if result is not None:
+                return result
+    elif isinstance(value, list):
+        for child in value:
+            result = find_live_tab(child)
+            if result is not None:
+                return result
+    return None
+
+
+def find_lockup_videos(value: object) -> Iterator[dict[str, object]]:
+    if isinstance(value, dict):
+        video = value.get("lockupViewModel")
+        if (
+            isinstance(video, dict)
+            and video.get("contentType") == "LOCKUP_CONTENT_TYPE_VIDEO"
+        ):
+            yield video
+        for child in value.values():
+            yield from find_lockup_videos(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from find_lockup_videos(child)
+
+
+def has_live_badge(video: dict[str, object]) -> bool:
+    badges: list[dict[str, object]] = []
+
+    def collect_badges(value: object) -> None:
+        if isinstance(value, dict):
+            badge = value.get("thumbnailBadgeViewModel")
+            if isinstance(badge, dict):
+                badges.append(badge)
+            for child in value.values():
+                collect_badges(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect_badges(child)
+
+    collect_badges(video.get("contentImage", {}))
+    return any(
+        isinstance(badge.get("text"), str)
+        and badge["text"].strip().upper() == "LIVE"
+        for badge in badges
+    )
 
 
 def main() -> None:

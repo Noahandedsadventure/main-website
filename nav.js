@@ -87,91 +87,129 @@ document.querySelectorAll("nav").forEach((nav) => {
     syncMenuForViewport();
 });
 
-async function updateLiveStatus() {
-    try {
-        const url = new URL(liveStatusUrl);
-        url.searchParams.set("v", Date.now());
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) {
-            throw new Error(`Live status request failed: ${response.status}`);
+function renderUpcomingStreams(container, streams) {
+    if (!container) return;
+    container.replaceChildren();
+
+    const channels = [
+        { id: "UCzDVvHcpWnu510JRLGnK-qg", name: "Main Channel" },
+        { id: "UCMxGPWLjDHRQ9xoLHCXd45g", name: "Gaming Channel" },
+    ];
+
+    for (const channel of channels) {
+        const channelStreams = streams.filter((stream) => stream.channelId === channel.id);
+        if (channelStreams.length === 0) {
+            const card = document.createElement("article");
+            card.className = "upcoming-stream-card";
+
+            const heading = document.createElement("p");
+            heading.className = "upcoming-stream-channel";
+            heading.textContent = channel.name;
+
+            const message = document.createElement("p");
+            message.className = "text-cn-muted";
+            message.textContent = "No upcoming live streams are scheduled right now.";
+
+            card.append(heading, message);
+            container.appendChild(card);
+            continue;
         }
 
-        const { liveStream } = await response.json();
-        const isLive = Boolean(liveStream?.videoId);
-        document.querySelectorAll("#live-nav-link").forEach((link) => {
-            link.classList.toggle("is-live", isLive);
-        });
+        for (const stream of channelStreams) {
+            const card = document.createElement("article");
+            card.className = "upcoming-stream-card";
 
-        const liveSection = document.getElementById("livestream-section");
-        const liveLayout = document.getElementById("live-layout");
-        const offlineBox = document.getElementById("offline-box");
-        const livePlayer = document.getElementById("live-player");
-        const liveChat = document.getElementById("live-chat");
-        const title = liveStream
-            ? `${liveStream.channelName}: ${liveStream.title}`
-            : "No live stream right now";
+            const heading = document.createElement("p");
+            heading.className = "upcoming-stream-channel";
+            heading.textContent = channel.name;
 
-        if (liveSection) {
-            const streamTitle = document.getElementById("stream-title");
-            streamTitle.textContent = title;
-            liveSection.classList.toggle("is-visible", isLive);
-            setIframeSource(livePlayer, isLive
-                ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1`
-                : "");
-            setIframeSource(liveChat, isLive
-                ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
-                : "");
-        }
+            const title = document.createElement("h3");
+            title.className = "upcoming-stream-title";
+            title.textContent = stream.title;
 
-        if (liveLayout && offlineBox) {
-            const statusTitle = isLive ? `${liveStream.channelName} is live` : "No live stream right now";
-            document.getElementById("stream-title").textContent = title;
-            document.getElementById("offline-title").textContent = statusTitle;
-            document.getElementById("offline-message").textContent = isLive
-                ? "Watch the live stream below."
-                : "Neither channel is currently broadcasting. Check back soon for live train streams and updates.";
-            document.getElementById("live-status-banner").textContent = isLive
-                ? `LIVE NOW ON ${liveStream.channelName}`
-                : "Not live right now";
+            const schedule = document.createElement("p");
+            schedule.className = "upcoming-stream-time";
+            const scheduledStart = new Date(stream.scheduledStartTime);
+            schedule.textContent = `Upcoming live stream - ${new Intl.DateTimeFormat(
+                undefined,
+                {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                },
+            ).format(scheduledStart)}`;
 
-            const watchLink = document.getElementById("live-watch-link");
-            const channelLink = document.getElementById("live-channel-link");
-            watchLink.href = isLive
-                ? `https://www.youtube.com/watch?v=${encodeURIComponent(liveStream.videoId)}`
-                : "https://www.youtube.com/@NoahandEdsTrainadventures";
-            watchLink.textContent = isLive ? "Watch Live Stream" : "Visit YouTube";
-            channelLink.href = isLive
-                ? `https://www.youtube.com/channel/${encodeURIComponent(liveStream.channelId)}`
-                : "https://www.youtube.com/@NoahandEdsTrainadventures";
-            channelLink.textContent = isLive
-                ? `${liveStream.channelName} on YouTube`
-                : "Main YouTube Channel";
-            liveLayout.style.display = isLive ? "grid" : "none";
-            offlineBox.style.display = isLive ? "none" : "block";
-            document.getElementById("status-wrap").classList.toggle("is-live", isLive);
-            setIframeSource(livePlayer, isLive
-                ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1`
-                : "");
-            setIframeSource(liveChat, isLive
-                ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
-                : "");
-        }
-    } catch (error) {
-        console.error("Could not load cached live status:", error);
-        document.querySelectorAll("#live-nav-link").forEach((link) => {
-            link.classList.remove("is-live");
-        });
+            const link = document.createElement("a");
+            link.className = "upcoming-stream-link";
+            link.href = `https://www.youtube.com/watch?v=${encodeURIComponent(stream.videoId)}`;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "View scheduled stream";
 
-        const streamTitle = document.getElementById("stream-title");
-        if (streamTitle) {
-            streamTitle.textContent = "Live status unavailable";
-        }
-
-        const liveStatusBanner = document.getElementById("live-status-banner");
-        if (liveStatusBanner) {
-            liveStatusBanner.textContent = "Live status unavailable";
+            card.append(heading, title, schedule, link);
+            container.appendChild(card);
         }
     }
+}
+
+function updateCurrentLiveStream(liveStream) {
+    const isLive = Boolean(liveStream?.videoId);
+    document.querySelectorAll("#live-nav-link").forEach((link) => {
+        link.classList.toggle("is-live", isLive);
+    });
+
+    const liveSection = document.getElementById("livestream-section");
+    const liveLayout = document.getElementById("live-layout");
+    const offlineBox = document.getElementById("offline-box");
+    const livePlayer = document.getElementById("live-player");
+    const liveChat = document.getElementById("live-chat");
+    const title = liveStream
+        ? `${liveStream.channelName}: ${liveStream.title}`
+        : "No live stream right now";
+    const streamTitle = document.getElementById("stream-title");
+    if (streamTitle) streamTitle.textContent = title;
+
+    if (liveSection) {
+        liveSection.classList.toggle("is-visible", isLive);
+    }
+
+    if (liveLayout && offlineBox) {
+        document.getElementById("offline-title").textContent = isLive
+            ? `${liveStream.channelName} is live`
+            : "No live stream right now";
+        document.getElementById("offline-message").textContent = isLive
+            ? "Watch the live stream below."
+            : "Neither channel is currently broadcasting. Check back soon for live train streams and updates.";
+        document.getElementById("live-status-banner").textContent = isLive
+            ? `LIVE NOW ON ${liveStream.channelName}`
+            : "Not live right now";
+
+        const watchLink = document.getElementById("live-watch-link");
+        const channelLink = document.getElementById("live-channel-link");
+        watchLink.href = isLive
+            ? `https://www.youtube.com/watch?v=${encodeURIComponent(liveStream.videoId)}`
+            : "https://www.youtube.com/@NoahandEdsTrainadventures";
+        watchLink.textContent = isLive ? "Watch Live Stream" : "Visit YouTube";
+        channelLink.href = isLive
+            ? `https://www.youtube.com/channel/${encodeURIComponent(liveStream.channelId)}`
+            : "https://www.youtube.com/@NoahandEdsTrainadventures";
+        channelLink.textContent = isLive
+            ? `${liveStream.channelName} on YouTube`
+            : "Main YouTube Channel";
+        liveLayout.style.display = isLive ? "grid" : "none";
+        offlineBox.style.display = isLive ? "none" : "block";
+    }
+
+    setIframeSource(
+        livePlayer,
+        isLive ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1` : "",
+    );
+    setIframeSource(
+        liveChat,
+        isLive
+            ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
+            : "",
+    );
+    document.getElementById("status-wrap")?.classList.toggle("is-live", isLive);
 }
 
 function setIframeSource(iframe, source) {
@@ -180,5 +218,79 @@ function setIframeSource(iframe, source) {
     }
 }
 
-updateLiveStatus();
-window.setInterval(updateLiveStatus, 60000);
+async function updateStreamSchedule() {
+    try {
+        const url = new URL(liveStatusUrl);
+        url.searchParams.set("v", Date.now());
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) {
+            throw new Error(`Stream schedule request failed: ${response.status}`);
+        }
+
+        const { liveStreams, upcomingStreams } = await response.json();
+        const validStreams = (streams, isUpcoming = false) => Array.isArray(streams)
+            && streams.every((stream) => (
+                stream
+                && typeof stream.videoId === "string"
+                && typeof stream.title === "string"
+                && typeof stream.channelId === "string"
+                && typeof stream.channelName === "string"
+                && (!isUpcoming
+                    || (typeof stream.scheduledStartTime === "string"
+                        && Number.isFinite(Date.parse(stream.scheduledStartTime))))
+            ));
+        if (!validStreams(liveStreams) || !validStreams(upcomingStreams, true)) {
+            throw new Error("Stream schedule data has an invalid format.");
+        }
+        const futureUpcomingStreams = upcomingStreams.filter(
+            (stream) => Date.parse(stream.scheduledStartTime) > Date.now(),
+        );
+
+        updateCurrentLiveStream(liveStreams[0] ?? null);
+        renderUpcomingStreams(
+            document.getElementById("home-upcoming-streams"),
+            futureUpcomingStreams,
+        );
+        renderUpcomingStreams(
+            document.getElementById("live-upcoming-streams"),
+            futureUpcomingStreams,
+        );
+    } catch (error) {
+        console.error("Could not load stream schedule:", error);
+        document.querySelectorAll("#live-nav-link").forEach((link) => {
+            link.classList.remove("is-live");
+        });
+        const streamTitle = document.getElementById("stream-title");
+        if (streamTitle) streamTitle.textContent = "Live status unavailable";
+        const liveStatusBanner = document.getElementById("live-status-banner");
+        if (liveStatusBanner) liveStatusBanner.textContent = "Live status unavailable";
+        const liveLayout = document.getElementById("live-layout");
+        if (liveLayout) liveLayout.style.display = "none";
+        const offlineBox = document.getElementById("offline-box");
+        if (offlineBox) {
+            offlineBox.style.display = "block";
+            const offlineTitle = document.getElementById("offline-title");
+            if (offlineTitle) offlineTitle.textContent = "Live status unavailable";
+            const offlineMessage = document.getElementById("offline-message");
+            if (offlineMessage) {
+                offlineMessage.textContent = "Please check the YouTube channels directly while the live status is unavailable.";
+            }
+        }
+        const containers = [
+            document.getElementById("home-upcoming-streams"),
+            document.getElementById("live-upcoming-streams"),
+        ];
+        containers
+            .filter(Boolean)
+            .forEach((container) => {
+                container.replaceChildren();
+                const message = document.createElement("p");
+                message.className = "text-cn-muted";
+                message.textContent = "Upcoming stream schedule is unavailable. Please check the YouTube channels.";
+                container.appendChild(message);
+            });
+    }
+}
+
+updateStreamSchedule();
+window.setInterval(updateStreamSchedule, 120000);

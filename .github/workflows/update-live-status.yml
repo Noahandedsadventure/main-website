@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Check YouTube channel feeds
+      - name: Check YouTube channel schedules
         run: python scripts/update_live_status.py
 
       - name: Publish status change

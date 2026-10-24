@@ -6,7 +6,7 @@
     <script src="../anniversary.js"></script>
     <title>LIVE STREAM | Noah and Ed's Train Adventures</title>
     <link rel="canonical" href="https://noahandedsadventure.github.io/main-website/live/">
-    <meta name="description" content="Check the live stream status and watch Noah & Ed's Train Adventures on YouTube when a Canadian National railfan stream is live.">
+    <meta name="description" content="Watch current live streams and see scheduled upcoming streams from both Noah & Ed's Train Adventures YouTube channels.">
     <link rel="icon" type="image/jpeg" href="../logo.jpg">
     <meta property="og:image" content="https://noahandedsadventure.github.io/main-website/logo.jpg">
     <meta property="og:image:alt" content="Noah & Ed's Train Adventures train logo">
@@ -20,13 +20,6 @@
     <script src="../nav.js" defer></script>
 
     <style>
-        .banner-box strong {
-            color: #fff;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-        }
-
         .secondary-links {
             margin-top: 2rem;
             display: flex;
@@ -47,32 +40,51 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .button.primary {
-            background: var(--cn-red);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(229, 57, 53, 0.25);
-        }
-
         .button.secondary {
             background: transparent;
             border: 1px solid var(--cn-border);
             color: var(--cn-text);
         }
 
+        .button.primary {
+            background: var(--cn-red);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(var(--cn-red-rgb), 0.25);
+        }
+
+        .upcoming-page-title {
+            margin: 1rem 0 0.5rem;
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .upcoming-page-description {
+            margin: 0 0 2rem;
+            color: var(--cn-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .stream-section-title {
+            margin: 2.5rem 0 1rem;
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
         .button:hover {
             transform: translateY(-1px);
         }
 
-        @media (max-width: 850px) {
-            .live-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .video-block iframe,
-            .chat-block iframe {
-                min-height: 280px;
-            }
+        .scheduled-streams {
+            margin-top: 3rem;
         }
+
     </style>
 </head>
 <body>
@@ -93,7 +105,7 @@
                 <a href="../mods/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Mods</a>
                 <a href="../video/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Videos</a>
                 <a href="../gaming/" class="nav-btn gaming-nav-link text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Gaming Channel</a>
-                <a id="live-nav-link" href="../live/" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
+                <a id="live-nav-link" href="../live/" class="live-stream-link uppercase text-sm md:text-base">LIVE STREAM</a>
             </div>
         </div>
     </nav>
@@ -135,8 +147,16 @@
             <a id="live-watch-link" class="button primary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Visit YouTube</a>
         </div>
 
+        <section class="scheduled-streams" aria-labelledby="upcoming-streams-title">
+            <h2 id="upcoming-streams-title" class="stream-section-title">Scheduled Streams</h2>
+            <p class="upcoming-page-description">Only streams scheduled to start in the future appear here. Times are shown in your local time.</p>
+            <div id="live-upcoming-streams" class="upcoming-stream-list upcoming-stream-list-page" aria-live="polite">
+                <p class="text-cn-muted">Checking both channel schedules...</p>
+            </div>
+        </section>
+
         <div class="secondary-links">
-            <a class="button primary" href="./">Back to Home</a>
+            <a class="button primary" href="../">Back to Home</a>
             <a id="live-channel-link" class="button secondary" href="https://www.youtube.com/@NoahandEdsTrainadventures" target="_blank" rel="noopener noreferrer">Main YouTube Channel</a>
         </div>
     </main>

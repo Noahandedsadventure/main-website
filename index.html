@@ -54,7 +54,7 @@
                 <a href="mods/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Mods</a>
                 <a href="video/" class="nav-btn text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Videos</a>
                 <a href="gaming/" class="nav-btn gaming-nav-link text-cn-muted hover:text-white pb-1 transition-colors uppercase text-sm md:text-base font-medium">Gaming Channel</a>
-                <a id="live-nav-link" href="live/" class="live-stream-link uppercase text-sm md:text-base">🔴 LIVE STREAM</a>
+                <a id="live-nav-link" href="live/" class="live-stream-link uppercase text-sm md:text-base">LIVE STREAM</a>
 
             </div>
         </div>
@@ -85,18 +85,6 @@
 
     <main class="flex-grow container max-w-6xl mx-auto px-4 py-12">
 
-        <section id="livestream-section" aria-live="polite">
-            <div class="live-stream-header">
-                <div class="live-stream-dot"></div>
-                <h2 id="stream-title" class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Checking for live stream...</h2>
-            </div>
-
-            <div class="live-stream-grid">
-                <iframe id="live-player" title="Live stream player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                <iframe id="live-chat" title="Live stream chat" src="" allow="clipboard-write; encrypted-media;" ></iframe>
-            </div>
-        </section>
-
         <!-- TAB 1: HOME (YouTube Feed) -->
         <div id="home" class="tab-content active">
             <div class="flex items-center gap-3 mb-8">
@@ -104,7 +92,7 @@
                 <h2 class="text-3xl font-oswald font-bold text-white uppercase tracking-wide">Latest CN Catches</h2>
             </div>
             
-            <p class="text-cn-muted mb-8 text-lg">One Short, one long-form upload, and one livestream from our main YouTube channel.</p>
+            <p class="text-cn-muted mb-8 text-lg">Latest videos and upcoming live streams from both channels.</p>
 
             <section class="mb-10 rounded-xl border border-cn-border bg-cn-card p-6 md:flex md:items-center md:justify-between md:gap-6">
                 <div>
@@ -124,8 +112,10 @@
                     <div id="latest-long-video" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest long-form video...</div>
                 </section>
                 <section>
-                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Latest Livestream</h3>
-                    <div id="latest-livestream" class="bg-cn-card border border-cn-border rounded-xl p-5 text-cn-muted">Loading latest livestream...</div>
+                    <h3 class="mb-3 font-oswald text-xl font-bold uppercase tracking-wide text-white">Upcoming Live Streams</h3>
+                    <div id="home-upcoming-streams" class="upcoming-stream-list" aria-live="polite">
+                        <p class="text-cn-muted">Checking both channel schedules...</p>
+                    </div>
                 </section>
             </div>
             <p class="mb-12 text-center">
@@ -495,7 +485,6 @@
                         && duration < SHORTS_MAX_SECONDS
                         && !video.liveStreamingDetails;
                 });
-                const liveVideo = videos.find(video => Boolean(video.liveStreamingDetails));
                 const longVideo = videos.find(video => {
                     const duration = parseYouTubeDuration(video.contentDetails.duration);
                     return duration !== null && duration >= SHORTS_MAX_SECONDS && !video.liveStreamingDetails;
@@ -503,13 +492,11 @@
 
                 renderVideoCard(document.getElementById('latest-short'), shortVideo, 'Short');
                 renderVideoCard(document.getElementById('latest-long-video'), longVideo, 'long-form video');
-                renderVideoCard(document.getElementById('latest-livestream'), liveVideo, 'livestream');
             } catch (error) {
                 console.error('Failed to load the main channel videos:', error);
                 for (const [id, label] of [
                     ['latest-short', 'Short'],
-                    ['latest-long-video', 'long-form video'],
-                    ['latest-livestream', 'livestream']
+                    ['latest-long-video', 'long-form video']
                 ]) {
                     renderVideoCard(document.getElementById(id), null, label);
                 }

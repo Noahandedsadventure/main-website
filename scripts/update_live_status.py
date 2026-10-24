@@ -26,7 +26,10 @@ def fetch(url: str) -> str:
         return response.read().decode("utf-8")
 
 
-def find_streams() -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+def find_streams() -> tuple[
+    list[dict[str, str | bool]],
+    list[dict[str, str]],
+]:
     live_streams = []
     upcoming_streams = []
     for channel_id, channel_name in CHANNELS:
@@ -94,7 +97,18 @@ def find_streams() -> tuple[list[dict[str, str]], list[dict[str, str]]]:
                             "scheduledStartTime": scheduled_start.isoformat(),
                         }
                     )
+                else:
+                    live_streams.append(
+                        {
+                            **stream,
+                            "scheduledStartTime": scheduled_start.isoformat(),
+                            "scheduledStartReached": True,
+                        }
+                    )
 
+    live_streams.sort(
+        key=lambda stream: stream.get("scheduledStartReached") is True
+    )
     upcoming_streams.sort(key=lambda stream: stream["scheduledStartTime"])
     return live_streams, upcoming_streams
 

@@ -1,5 +1,6 @@
 const liveStatusUrl = new URL("live-status.json", document.currentScript.src);
 const siteRoot = new URL(".", document.currentScript.src);
+let scheduleTransitionTimeout;
 const isHalloween = (() => {
     const now = new Date();
     return now >= new Date(2026, 9, 23) && now < new Date(2026, 10, 2);
@@ -151,10 +152,14 @@ function renderUpcomingStreams(container, streams) {
     }
 }
 
-function updateCurrentLiveStream(liveStream) {
-    const isLive = Boolean(liveStream?.videoId);
+function updateCurrentLiveStream(liveStream, scheduledStartReached = false) {
+    const hasStream = Boolean(liveStream?.videoId);
+    const isScheduledStart = hasStream && (
+        scheduledStartReached || liveStream.scheduledStartReached === true
+    );
+    const isLive = hasStream && !isScheduledStart;
     document.querySelectorAll("#live-nav-link").forEach((link) => {
-        link.classList.toggle("is-live", isLive);
+        link.classList.toggle("is-live", hasStream);
     });
 
     const liveSection = document.getElementById("livestream-section");
@@ -162,60 +167,86 @@ function updateCurrentLiveStream(liveStream) {
     const offlineBox = document.getElementById("offline-box");
     const livePlayer = document.getElementById("live-player");
     const liveChat = document.getElementById("live-chat");
-    const title = liveStream
+    const title = isLive
         ? `${liveStream.channelName}: ${liveStream.title}`
-        : "No live stream right now";
+        : isScheduledStart
+            ? `Starting soon: ${liveStream.channelName}: ${liveStream.title}`
+            : "No live stream right now";
     const streamTitle = document.getElementById("stream-title");
     if (streamTitle) streamTitle.textContent = title;
 
     if (liveSection) {
-        liveSection.classList.toggle("is-visible", isLive);
+        liveSection.classList.toggle("is-visible", hasStream);
     }
 
     if (liveLayout && offlineBox) {
         document.getElementById("offline-title").textContent = isLive
             ? `${liveStream.channelName} is live`
-            : "No live stream right now";
+            : isScheduledStart
+                ? "The scheduled stream is starting"
+                : "No live stream right now";
         document.getElementById("offline-message").textContent = isLive
             ? "Watch the live stream below."
-            : "Neither channel is currently broadcasting. Check back soon for live train streams and updates.";
+            : isScheduledStart
+                ? "The scheduled start time has arrived. The player is ready; YouTube may take a moment to begin broadcasting."
+                : "Neither channel is currently broadcasting. Check back soon for live train streams and updates.";
         document.getElementById("live-status-banner").textContent = isLive
             ? `LIVE NOW ON ${liveStream.channelName}`
-            : "Not live right now";
+            : isScheduledStart
+                ? `SCHEDULED STREAM STARTING ON ${liveStream.channelName}`
+                : "Not live right now";
 
         const watchLink = document.getElementById("live-watch-link");
         const channelLink = document.getElementById("live-channel-link");
-        watchLink.href = isLive
+        watchLink.href = hasStream
             ? `https://www.youtube.com/watch?v=${encodeURIComponent(liveStream.videoId)}`
             : "https://www.youtube.com/@NoahandEdsTrainadventures";
-        watchLink.textContent = isLive ? "Watch Live Stream" : "Visit YouTube";
-        channelLink.href = isLive
+        watchLink.textContent = isLive
+            ? "Watch Live Stream"
+            : isScheduledStart
+                ? "Open Scheduled Stream"
+                : "Visit YouTube";
+        channelLink.href = hasStream
             ? `https://www.youtube.com/channel/${encodeURIComponent(liveStream.channelId)}`
             : "https://www.youtube.com/@NoahandEdsTrainadventures";
-        channelLink.textContent = isLive
+        channelLink.textContent = hasStream
             ? `${liveStream.channelName} on YouTube`
             : "Main YouTube Channel";
-        liveLayout.style.display = isLive ? "grid" : "none";
-        offlineBox.style.display = isLive ? "none" : "block";
+        liveLayout.style.display = hasStream ? "grid" : "none";
+        offlineBox.style.display = hasStream ? "none" : "block";
     }
 
     setIframeSource(
         livePlayer,
-        isLive ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1` : "",
+        hasStream ? `https://www.youtube.com/embed/${encodeURIComponent(liveStream.videoId)}?autoplay=1` : "",
     );
     setIframeSource(
         liveChat,
-        isLive
+        hasStream
             ? `https://www.youtube.com/live_chat?v=${encodeURIComponent(liveStream.videoId)}&embed_domain=${encodeURIComponent(window.location.hostname)}`
             : "",
     );
-    document.getElementById("status-wrap")?.classList.toggle("is-live", isLive);
+    document.getElementById("status-wrap")?.classList.toggle("is-live", hasStream);
 }
 
 function setIframeSource(iframe, source) {
     if (iframe && iframe.getAttribute("src") !== source) {
         iframe.src = source;
     }
+}
+
+function scheduleNextStreamTransition(streams) {
+    window.clearTimeout(scheduleTransitionTimeout);
+    const nextStartTime = streams
+        .map((stream) => Date.parse(stream.scheduledStartTime))
+        .filter((startTime) => startTime > Date.now())
+        .sort((first, second) => first - second)[0];
+    if (nextStartTime === undefined) return;
+
+    scheduleTransitionTimeout = window.setTimeout(
+        updateStreamSchedule,
+        Math.min(nextStartTime - Date.now() + 50, 2147483647),
+    );
 }
 
 async function updateStreamSchedule() {
@@ -235,7 +266,12 @@ async function updateStreamSchedule() {
                 && typeof stream.title === "string"
                 && typeof stream.channelId === "string"
                 && typeof stream.channelName === "string"
+                && (stream.scheduledStartReached === undefined
+                    || typeof stream.scheduledStartReached === "boolean")
                 && (!isUpcoming
+                    || (typeof stream.scheduledStartTime === "string"
+                        && Number.isFinite(Date.parse(stream.scheduledStartTime))))
+                && (stream.scheduledStartReached !== true
                     || (typeof stream.scheduledStartTime === "string"
                         && Number.isFinite(Date.parse(stream.scheduledStartTime))))
             ));
@@ -245,8 +281,14 @@ async function updateStreamSchedule() {
         const futureUpcomingStreams = upcomingStreams.filter(
             (stream) => Date.parse(stream.scheduledStartTime) > Date.now(),
         );
+        const startedScheduledStreams = upcomingStreams
+            .filter((stream) => Date.parse(stream.scheduledStartTime) <= Date.now())
+            .map((stream) => ({ ...stream, scheduledStartReached: true }));
+        scheduleNextStreamTransition(upcomingStreams);
 
-        updateCurrentLiveStream(liveStreams[0] ?? null);
+        updateCurrentLiveStream(
+            liveStreams[0] ?? startedScheduledStreams[0] ?? null,
+        );
         renderUpcomingStreams(
             document.getElementById("home-upcoming-streams"),
             futureUpcomingStreams,

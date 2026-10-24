@@ -1,5 +1,7 @@
 import json
+import time
 import urllib.request
+from urllib.error import HTTPError
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,14 +24,42 @@ def fetch(url: str) -> str:
         url,
         headers={"User-Agent": USER_AGENT},
     )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return response.read().decode("utf-8")
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return response.read().decode("utf-8")
+        except HTTPError as error:
+            if error.code not in {429, 500, 502, 503, 504} or attempt == 3:
+                raise
+            retry_after = error.headers.get("Retry-After")
+            delay = (
+                min(int(retry_after), 30)
+                if retry_after and retry_after.isdigit()
+                else 2 ** attempt
+            )
+            time.sleep(delay)
+    raise RuntimeError(f"Could not fetch {url} after retrying")
 
 
-def find_streams() -> tuple[
+def find_streams(cached_status: dict[str, object]) -> tuple[
     list[dict[str, str | bool]],
     list[dict[str, str]],
 ]:
+    cached_scheduled_starts = {}
+    for status_key in ("liveStreams", "upcomingStreams"):
+        streams = cached_status.get(status_key, [])
+        if not isinstance(streams, list):
+            raise ValueError(f"Cached {status_key} must be a list")
+        for stream in streams:
+            if (
+                isinstance(stream, dict)
+                and isinstance(stream.get("videoId"), str)
+                and isinstance(stream.get("scheduledStartTime"), str)
+            ):
+                cached_scheduled_starts[stream["videoId"]] = (
+                    stream["scheduledStartTime"]
+                )
+
     live_streams = []
     upcoming_streams = []
     for channel_id, channel_name in CHANNELS:
@@ -82,14 +112,27 @@ def find_streams() -> tuple[
             if has_badge(video, "LIVE"):
                 live_streams.append(stream)
             elif has_badge(video, "UPCOMING"):
-                watch_page = fetch(
-                    f"https://www.youtube.com/watch?v={video_id}"
-                )
-                scheduled_start = find_scheduled_start(watch_page)
-                if scheduled_start is None:
-                    raise ValueError(
-                        f"Scheduled start time is missing for {channel_name}"
+                cached_start = cached_scheduled_starts.get(video_id)
+                if cached_start is not None:
+                    try:
+                        scheduled_start = datetime.fromisoformat(cached_start)
+                    except ValueError as error:
+                        raise ValueError(
+                            f"Cached scheduled start time is invalid for {channel_name}"
+                        ) from error
+                    if scheduled_start.tzinfo is None:
+                        raise ValueError(
+                            f"Cached scheduled start time has no timezone for {channel_name}"
+                        )
+                else:
+                    watch_page = fetch(
+                        f"https://www.youtube.com/watch?v={video_id}"
                     )
+                    scheduled_start = find_scheduled_start(watch_page)
+                    if scheduled_start is None:
+                        raise ValueError(
+                            f"Scheduled start time is missing for {channel_name}"
+                        )
                 if scheduled_start > datetime.now(timezone.utc):
                     upcoming_streams.append(
                         {
@@ -235,8 +278,8 @@ def find_scheduled_start(page: str) -> datetime | None:
 
 
 def main() -> None:
-    live_streams, upcoming_streams = find_streams()
     current = json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+    live_streams, upcoming_streams = find_streams(current)
     if (
         current.get("liveStreams", []) == live_streams
         and current.get("upcomingStreams", []) == upcoming_streams

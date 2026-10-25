@@ -1,13 +1,12 @@
 {
-  "updatedAt": "2026-10-24T22:13:10.777445+00:00",
-  "liveStreams": [],
-  "upcomingStreams": [
+  "updatedAt": "2026-10-25T19:57:18.783776+00:00",
+  "liveStreams": [
     {
       "videoId": "bhDD2FRCMRQ",
       "title": "SoftEOT Decoder Live | Railfan Radio Stream (90% Chance)",
       "channelId": "UCzDVvHcpWnu510JRLGnK-qg",
-      "channelName": "Main Channel",
-      "scheduledStartTime": "2026-10-25T19:00:00+00:00"
+      "channelName": "Main Channel"
     }
-  ]
+  ],
+  "upcomingStreams": []
 }

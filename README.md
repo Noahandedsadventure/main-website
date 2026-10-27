@@ -2,6 +2,10 @@
 
 This website is for the YouTube channel Noah & Ed's Train Adventures.
 
+## Subscriber count
+
+The main YouTube channel's subscriber count appears in every page's header and refreshes every 15 minutes while a page is open. The count is retrieved from the YouTube Data API in `subscriber-count.js`.
+
 ## Gallery setup
 
 Add photos to the `gallery/photos` folder and then add matching image cards to `gallery/index.html`.

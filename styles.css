@@ -404,6 +404,34 @@ header[role="banner"] {
     background: rgba(18, 18, 18, 0.8);
 }
 
+.site-subscriber-count {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--cn-border);
+    border-radius: 0.3rem;
+    color: var(--cn-muted);
+    font-family: Oswald, sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.site-subscriber-count strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.site-subscriber-count:hover,
+.site-subscriber-count:focus-visible {
+    border-color: var(--cn-red);
+    color: #ffffff;
+}
+
 .site-nav-links .nav-btn {
     padding: 0.45rem 0.6rem;
     border-radius: 0.3rem;
@@ -457,6 +485,10 @@ header[role="banner"] {
 
     .site-nav-toggle {
         display: inline-flex;
+    }
+
+    .site-subscriber-count {
+        font-size: 0.75rem;
     }
 
     .site-nav-links {

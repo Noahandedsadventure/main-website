@@ -9,6 +9,7 @@
     <link rel="icon" type="image/jpeg" href="../logo.jpg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
     <script src="../anniversary.js"></script>
+    <script src="../subscriber-count.js" defer></script>
     <style>
         :root {
             color-scheme: dark;
@@ -71,6 +72,32 @@
             font-size: 0.8rem;
             font-weight: 500;
             text-transform: uppercase;
+        }
+
+        .site-subscriber-count {
+            display: inline-flex;
+            flex-shrink: 0;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.6rem;
+            border: 1px solid var(--line);
+            border-radius: 0.3rem;
+            color: var(--muted);
+            font-family: Oswald, sans-serif;
+            font-size: 0.8rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .site-subscriber-count strong { color: var(--paper); }
+
+        .site-subscriber-count:hover,
+        .site-subscriber-count:focus-visible { border-color: var(--red); color: var(--paper); }
+
+        @media (max-width: 600px) {
+            .topbar { flex-wrap: wrap; padding-block: 0.75rem; }
+            .topbar .site-subscriber-count { order: 3; width: 100%; justify-content: center; }
         }
 
         main { width: min(100% - 2.5rem, 1200px); margin-inline: auto; }

@@ -8,7 +8,6 @@ from pathlib import Path
 
 
 CHANNELS = (
-    ("UCMxGPWLjDHRQ9xoLHCXd45g", "Gaming Channel"),
     ("UCzDVvHcpWnu510JRLGnK-qg", "Main Channel"),
 )
 STATUS_FILE = Path(__file__).resolve().parents[1] / "live-status.json"

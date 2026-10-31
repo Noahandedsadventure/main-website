@@ -96,8 +96,7 @@ body.halloween-theme .bg-cn-card {
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38), 0 0 18px rgba(113, 57, 145, 0.12);
 }
 
-body.halloween-theme .live-stream-link,
-body.halloween-theme .gaming-nav-link {
+body.halloween-theme .live-stream-link {
     box-shadow: 0 0 14px rgba(255, 117, 24, 0.24);
 }
 
@@ -414,17 +413,6 @@ header[role="banner"] {
     background: rgba(var(--cn-red-rgb), 0.15);
 }
 
-.site-nav-links .gaming-nav-link {
-    border: 1px solid rgba(var(--cn-red-rgb), 0.65);
-    color: #ffffff;
-}
-
-.site-nav-links .gaming-nav-link:hover,
-.site-nav-links .gaming-nav-link:focus-visible {
-    background: var(--cn-red);
-    color: #ffffff;
-}
-
 .site-nav-toggle {
     display: none;
     align-items: center;
@@ -477,11 +465,6 @@ header[role="banner"] {
         border-bottom: 1px solid var(--cn-border);
     }
 
-    .site-nav-links .gaming-nav-link {
-        padding-left: 0.75rem;
-        border: 1px solid rgba(var(--cn-red-rgb), 0.65);
-    }
-
     .site-nav-links .live-stream-link {
         align-self: flex-start;
         margin-top: 0.5rem;
@@ -497,10 +480,6 @@ header[role="banner"] {
     height: 2px;
     background-color: var(--cn-red);
     transition: width 0.3s ease;
-}
-
-.gaming-nav-link::after {
-    display: none;
 }
 
 .nav-btn:hover::after,

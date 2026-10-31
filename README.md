@@ -29,4 +29,4 @@ All mods listed on the page depend on Immersive Railroading (IR) and require all
 
 ## Live stream status
 
-Live and upcoming stream status are refreshed by the scheduled GitHub Actions workflow in `.github/workflows/update-live-status.yml`. It checks both channels' public YouTube Live tabs and authoritative scheduled start times without using the YouTube Data API quota, then publishes the results to `live-status.json`. Past scheduled events are excluded from the schedule, and the Live page switches to the scheduled stream's player when its start time arrives.
+Live and upcoming stream status are refreshed by the scheduled GitHub Actions workflow in `.github/workflows/update-live-status.yml`. It checks the public YouTube Live tab and authoritative scheduled start times for the main channel without using the YouTube Data API quota, then publishes the results to `live-status.json`. Past scheduled events are excluded from the schedule, and the Live page switches to the scheduled stream's player when its start time arrives.

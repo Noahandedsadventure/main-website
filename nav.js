@@ -94,7 +94,6 @@ function renderUpcomingStreams(container, streams) {
 
     const channels = [
         { id: "UCzDVvHcpWnu510JRLGnK-qg", name: "Main Channel" },
-        { id: "UCMxGPWLjDHRQ9xoLHCXd45g", name: "Gaming Channel" },
     ];
 
     for (const channel of channels) {

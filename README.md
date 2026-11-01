@@ -21,16 +21,6 @@ Then use a path like this in the HTML:
 <img src="photos/train-shot-1.jpg" alt="Train shot 1">
 ```
 
-## Mods setup
-
-Put downloadable mod files in `mods/downloads` and add a download card to `mods/index.html` for each file. Link to the file with a relative path and the `download` attribute, for example:
-
-```html
-<a href="downloads/example-mod.zip" download>Download the mod</a>
-```
-
-All mods listed on the page depend on Immersive Railroading (IR) and require all needed IR files.
-
 ## Live stream status
 
 Live and upcoming stream status are refreshed by the scheduled GitHub Actions workflow in `.github/workflows/update-live-status.yml`. It checks the public YouTube Live tab and authoritative scheduled start times for the main channel without using the YouTube Data API quota, then publishes the results to `live-status.json`. Past scheduled events are excluded from the schedule, and the Live page switches to the scheduled stream's player when its start time arrives.

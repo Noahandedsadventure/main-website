@@ -1,13 +1,12 @@
 {
-  "updatedAt": "2026-11-01T23:01:57.355504+00:00",
-  "liveStreams": [],
-  "upcomingStreams": [
+  "updatedAt": "2026-11-04T02:38:28.789183+00:00",
+  "liveStreams": [
     {
       "videoId": "QD0HgZRahZ4",
-      "title": "Live sprague  sub radio feed",
+      "title": "Live sprague  sub radio feed test stream",
       "channelId": "UCzDVvHcpWnu510JRLGnK-qg",
-      "channelName": "Main Channel",
-      "scheduledStartTime": "2026-11-04T01:00:00+00:00"
+      "channelName": "Main Channel"
     }
-  ]
+  ],
+  "upcomingStreams": []
 }
